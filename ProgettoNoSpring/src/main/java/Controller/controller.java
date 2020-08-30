@@ -54,6 +54,7 @@ public class controller {
 	
 	
 	public boolean openConnection(request r) {
+		boolean ret;
 		try {
 			openConnection = (HttpURLConnection) new URL(r.getUrl_r()).openConnection();
 			openConnection.setRequestMethod(r.getType_r());
@@ -63,25 +64,83 @@ public class controller {
 			openConnection.setDoOutput(true);
 		}catch(MalformedURLException e) {
 			System.out.println("l'URL fornito non è valido...");
-			return false;
+			ret =  false;
 		}catch(IOException e) {
 			System.out.println("Errore durante l'inserimento...");
-			return false;
+			ret =  false;
 		}catch(Exception e) {
 			System.out.println("Errore generico");
-			return false;
+			ret =  false;
 		}
-		return true;
+		ret = true;
+		return ret;
+	}
+	public String readResponce() throws IOException {
+		InputStream input = openConnection.getInputStream();
+
+
+		String data = "";
+		String line = "";
+		try {
+			InputStreamReader inr = new InputStreamReader(input);
+			BufferedReader buf = new BufferedReader(inr);
+
+			while ((line = buf.readLine()) != null) {
+				data += line;
+			}
+		} finally {
+			input.close();
+		}
+		try {
+			JSONObject obj = (JSONObject) JSONValue.parseWithException(data);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Errore in lettura");
+			e.printStackTrace();
+		}
+		return data;
 	}
 	
 	
-	
 	/**
-	 * Metodi utili al fine li lanciare richieste
+	 * Metodo finalizzato a autenticare il token inserito
 	 */
+	public boolean userCheckRequest() {
+		String body = "{\r\n" + 
+				"    \"query\": \"tutto ok\"\r\n" + 
+				"}";
+		
+		request r = new request("https://api.dropboxapi.com/2/check/user",body,this.getToken(),"POST");
+		boolean flag = this.openConnection(r);
+		if(flag == false) {
+			return false;		// connessione NON andata a buon fine
+		}else { 				// connessione andata a buon fine
+			
+			//Specifichiamo gli headers
+			openConnection.setRequestProperty("Content-Type", "application/json"); //Non necessario per il list folder
+			
+			//Lancio richiesta
+			
+			try (OutputStream os = openConnection.getOutputStream()) {
+				byte[] in = r.getBody_r().getBytes("utf-8");
+				os.write(in, 0, in.length);
+				
+				String data = this.readResponce();
+				//System.out.println(data);
+			}catch(UnsupportedEncodingException e) {
+				System.out.println("Errore durante il lancio della richiesta");
+				return false;
+			}catch(IOException e) {
+				System.out.println("Errore durante il lancio della richiesta");
+				return false;
+			}
+			return true;
+
+			
+		}
+	}
 	
-	
-	public boolean listFolderRequest() throws IOException {
+	public boolean listFolderRequest(){
 		
 		String body = "{\r\n" + 
 				"    \"path\": \""+this.getPath()+"\",\r\n" + 
@@ -107,33 +166,14 @@ public class controller {
 				byte[] in = r.getBody_r().getBytes("utf-8");
 				os.write(in, 0, in.length);
 				
+				String data = this.readResponce();
+				System.out.println(data);
 			}catch(UnsupportedEncodingException e) {
 				System.out.println("Errore durante il lancio della richiesta");
+				return false;
 			}catch(IOException e) {
 				System.out.println("Errore durante il lancio della richiesta");
-			}
-			InputStream input = openConnection.getInputStream();
-
-
-			String data = "";
-			String line = "";
-			try {
-				InputStreamReader inr = new InputStreamReader(input);
-				BufferedReader buf = new BufferedReader(inr);
-
-				while ((line = buf.readLine()) != null) {
-					data += line;
-					System.out.println(line);
-				}
-			} finally {
-				input.close();
-			}
-			try {
-				JSONObject obj = (JSONObject) JSONValue.parseWithException(data);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Errore in lettura");
-				e.printStackTrace();
+				return false;
 			}
 			return true;
 		}

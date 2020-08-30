@@ -33,24 +33,31 @@ public class main {
 
 	public static void main(String[] args) throws MalformedURLException, IOException {
 		// TODO Auto-generated method stub
-
+		boolean flag1,flag2=true;
 		Scanner input = new Scanner(System.in);
 		/**
 		 * Indica la posizione della cartella in cui lavoreremo
 		 */
-		
-		System.out.println("Inserisce path Cartella");
-		String path = input.nextLine();		
-		System.out.println("Inserire Token di accesso :");
-		String token = input.nextLine();
-		controller cc = new controller(token,path);
-		boolean flag;
-		
+		do {
+			System.out.println("Inserisce path Cartella");
+			String path = input.nextLine();		
+			System.out.println("Inserire Token di accesso :");
+			String token = input.nextLine();
+			controller cc = new controller(token,path);
+			flag1 = cc.userCheckRequest();
+			if(!flag1) {
+				System.out.println("Il Token fornito potrebbe essere scaduto o invalido...Riprovare");
+			}else {
+				flag2 = cc.listFolderRequest();
+				if(flag2)	System.out.println("Utente certificato");
+				else 	System.out.println("Il Path specificato non è valido");
+
+			}
+		}while((!flag1)||(!flag2));
 		// User Check request ----> Se l'autenticazione non va a buon fine ripetere l'inserimento
 		
 		//PROVA RICHIESTA LIST FOLDER
-		flag = cc.listFolderRequest();
-		if(flag) System.out.println("Richiesta andata a buon fine");
+		
 		
 		
 	}
