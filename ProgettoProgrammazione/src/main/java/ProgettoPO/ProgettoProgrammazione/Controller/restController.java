@@ -27,73 +27,41 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 import ProgettoPO.ProgettoProgrammazione.models.review;
-
+import ProgettoPO.ProgettoProgrammazione.models.user;
+import ProgettoPO.ProgettoProgrammazione.myErrors.errorHandler;
 
 
 
 @RestController
 public class restController {
 	
+	private static boolean LOGGED_IN = false;
 	
 	@PostMapping("/listRev/{file}")
 	public String List_Review(@PathVariable String file){
-		//memory.listReview(file);
-		Vector<review> reviews = new Vector();
-		review r = new review();
-		
-		String url = "https://api.dropboxapi.com/2/files/list_revisions";
-		String jsonBody = "{\r\n" + 
-				"    \"path\": \"/Cartella1/"+file+"\",\r\n" + 
-				"    \"mode\": \"path\",\r\n" + 
-				"    \"limit\": 10\r\n" + 
-				"}";
-		HttpURLConnection openConnection;
-		try {
-			openConnection = (HttpURLConnection) new URL(url).openConnection();
-			openConnection.setRequestMethod("POST");
-			openConnection.setRequestProperty("Authorization",
-					"Bearer fayx-PTVhVQAAAAAAAAAAWMhqd6cVTWq7ceaB66i2Bs_w1vKQftfONFjSA7r0fhc");
-			openConnection.setDoOutput(true);
-			openConnection.setRequestProperty("Content-Type", "application/json");
-			OutputStream os = openConnection.getOutputStream();
-			byte[] input = jsonBody.getBytes("utf-8");
-			os.write(input, 0, input.length);
-			InputStream in = openConnection.getInputStream();
-
-			String data = "";
-			String appoggio = "";
-			try {
-				InputStreamReader inR = new InputStreamReader(in);
-				BufferedReader buf = new BufferedReader(inR);
-				data = buf.readLine();
-			} finally {
-				in.close();
-			}
-			try {
-				JSONObject obj = (JSONObject) JSONValue.parseWithException(data);
-				JSONArray arj = (JSONArray) obj.get("entries");
-				ObjectMapper objMap = new ObjectMapper();
-				for(Object rev:arj) {
-					JSONObject obj1 = (JSONObject) rev;
-					appoggio = obj1.toString();
-					r = objMap.readValue(appoggio,review.class);
-					reviews.add(r);
-				}
-				appoggio = "";
-				for(int i =0;i<reviews.size();i++) {
-					appoggio+="Review n° "+(reviews.size()-i)+"\n";
-					appoggio+= reviews.elementAt(i).toString()+"\n";
-				}
-				return appoggio;
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				return "Errore durante l'acquisizione delle review";
-			} 
-			
-		}catch (IOException e) {
-			// TODO Auto-generated catch block
-			return "Errore indirizzo invalido";
+		if(LOGGED_IN) {
+			String outPut = memory.listReview(file);
+			return outPut;
+		}else {
+			return "Prima di svolgere qualsiasi operazione è necessario specificare le credenziali:\n-Token di accesso all'API DropBox\n-Path della cartella in cui si intende lavorare\nUsare la rotta /check con parametri:\n -token\n -path";
 		}
-		
 	}
+	
+	@PostMapping("/check")
+	public String Check_User(@RequestParam(name = "token") String token,@RequestParam(name = "path", defaultValue = "") String path) {
+		boolean checkt;
+		String checkp;
+
+		checkt = user.checkToken(token);
+		if(!checkt) {
+			return "Il token fornito potrebbe essere scaduto o non valido";
+		}else {
+			checkp = user.checkPath(token, path);
+			if(checkp.compareTo("error")==0) return "Il path fornito non è valido";
+		}	
+		LOGGED_IN = true;	
+		return checkp;
+	}
+	
+	
 }

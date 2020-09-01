@@ -17,6 +17,8 @@ import org.json.simple.parser.ParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ProgettoPO.ProgettoProgrammazione.models.review;
+
 
 /**
  * 
@@ -26,6 +28,65 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 public class memory {
+	static Vector<review> reviews = new Vector();
+
+	static review r = new review();
 	
+	public static String listReview(String file) {
+		String url = "https://api.dropboxapi.com/2/files/list_revisions";
+		String jsonBody = "{\r\n" + 
+				"    \"path\": \"/Cartella1/"+file+"\",\r\n" + 
+				"    \"mode\": \"path\",\r\n" + 
+				"    \"limit\": 20\r\n" + 
+				"}";
+		HttpURLConnection openConnection;
+		try {
+			openConnection = (HttpURLConnection) new URL(url).openConnection();
+			openConnection.setRequestMethod("POST");
+			openConnection.setRequestProperty("Authorization",
+					"Bearer fayx-PTVhVQAAAAAAAAAAWMhqd6cVTWq7ceaB66i2Bs_w1vKQftfONFjSA7r0fhc");
+			openConnection.setDoOutput(true);
+			openConnection.setRequestProperty("Content-Type", "application/json");
+			OutputStream os = openConnection.getOutputStream();
+			byte[] input = jsonBody.getBytes("utf-8");
+			os.write(input, 0, input.length);
+			InputStream in = openConnection.getInputStream();
+
+			String data = "";
+			String appoggio = "";
+			try {
+				InputStreamReader inR = new InputStreamReader(in);
+				BufferedReader buf = new BufferedReader(inR);
+				data = buf.readLine();
+			} finally {
+				in.close();
+			}
+			try {
+				JSONObject obj = (JSONObject) JSONValue.parseWithException(data);
+				JSONArray arj = (JSONArray) obj.get("entries");
+				ObjectMapper objMap = new ObjectMapper();
+				reviews.removeAllElements();
+				for(Object rev:arj) {
+					JSONObject obj1 = (JSONObject) rev;
+					appoggio = obj1.toString();
+					r = objMap.readValue(appoggio,review.class);
+					reviews.add(r);
+				}
+				appoggio = "";
+				for(int i =0;i<reviews.size();i++) {
+					appoggio+="Review n° "+(reviews.size()-i)+"\n";
+					appoggio+= reviews.elementAt(i).toString()+"\n";
+				}
+				return appoggio;
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				return "Errore durante l'acquisizione delle review";
+			} 
+			
+		}catch (IOException e) {
+			// TODO Auto-generated catch block
+			return "Errore indirizzo invalido";
+		}
+	}
 	
 }
