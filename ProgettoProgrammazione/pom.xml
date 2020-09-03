@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.16.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-parent</artifactId>
+	<version>2.1.16.RELEASE</version>
+	<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ProgettoPO</groupId>
 	<artifactId>ProgettoProgrammazione</artifactId>
@@ -19,6 +19,13 @@
 </properties>
 
 	<dependencies>
+	<!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
+		<dependency>
+		    <groupId>joda-time</groupId>
+		    <artifactId>joda-time</artifactId>
+		    <version>2.10.5</version>
+		</dependency>
+			
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>

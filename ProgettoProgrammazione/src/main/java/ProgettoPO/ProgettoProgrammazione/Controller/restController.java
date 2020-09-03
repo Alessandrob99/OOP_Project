@@ -22,46 +22,59 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
+import ProgettoPO.ProgettoProgrammazione.handlers.errorHandler;
 import ProgettoPO.ProgettoProgrammazione.models.review;
+import ProgettoPO.ProgettoProgrammazione.models.statResponce;
 import ProgettoPO.ProgettoProgrammazione.models.user;
-import ProgettoPO.ProgettoProgrammazione.myErrors.errorHandler;
-
 
 
 @RestController
 public class restController {
 	
-	private static boolean LOGGED_IN = false;
+
 	
 	@PostMapping("/listRev/{file}")
-	public String List_Review(@PathVariable String file){
-		if(LOGGED_IN) {
-			String outPut = memory.listReview(file);
+	public JSONArray List_Review(@PathVariable String file){
+		if(user.isLOGGED_IN()) {
+			JSONArray outPut = memory.listReview(file);
 			return outPut;
 		}else {
-			return "Prima di svolgere qualsiasi operazione è necessario specificare le credenziali:\n-Token di accesso all'API DropBox\n-Path della cartella in cui si intende lavorare\nUsare la rotta /check con parametri:\n -token\n -path";
+			//Utente non loggato exception
+			return null;
 		}
 	}
 	
 	@PostMapping("/check")
 	public String Check_User(@RequestParam(name = "token") String token,@RequestParam(name = "path", defaultValue = "") String path) {
-		boolean checkt;
-		String checkp;
-
-		checkt = user.checkToken(token);
-		if(!checkt) {
-			return "Il token fornito potrebbe essere scaduto o non valido";
-		}else {
-			checkp = user.checkPath(token, path);
-			if(checkp.compareTo("error")==0) return "Il path fornito non è valido";
-		}	
-		LOGGED_IN = true;	
-		return checkp;
+		user.checkUser(token, path);
+		String jsonOut = "\r\n" + 
+				"{\r\n" + 
+				"    \"path\": \"/"+user.getPath()+"\",\r\n" + 
+				"    \"token\": \"/"+user.getToken()+"\",\r\n" +
+				"    \"LOGGED_IN\": "+user.isLOGGED_IN()+",\r\n" + 
+				"}";
+		return jsonOut;
 	}
 	
+	@GetMapping("/stats/{file}")
+	public String Stats(@PathVariable String file) {
+		if(user.isLOGGED_IN()) {
+			ObjectMapper objMap = new ObjectMapper();
+			statResponce sr = memory.getStats(file);
+			String jsonOut;
+			try {
+				jsonOut = objMap.writeValueAsString(sr);
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				return "Errore durante  la conversione del json";
+			}
+			return jsonOut;
+		}else {
+			return "Prima di svolgere qualsiasi operazione è necessario specificare le credenziali:\n-Token di accesso all'API DropBox\n-Path della cartella in cui si intende lavorare\nUsare la rotta /check con parametri:\n -token\n -path";
+		}
+	}
 	
 }

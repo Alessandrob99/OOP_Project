@@ -1,4 +1,4 @@
-package ProgettoPO.ProgettoProgrammazione.myErrors;
+package ProgettoPO.ProgettoProgrammazione.handlers;
 
 
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -14,11 +14,17 @@ public class errorHandler implements ErrorController {
     @ResponseBody
     public String handleError(HttpServletRequest request) {
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
         String message = "-Errore-";
         if(statusCode == 404) {
         	message = "-Errore- \nRotta non valida";
         }
+        if(statusCode == 500) {
+        	message = "-Errore- \nSi è verificato un problema all'interno del server";
+        }
+        if(statusCode==400) {
+        	message = "-Errore- \nLa richiesta inviata risulta incompleta\nSi prega di ricontrollare i dati forniti";
+        }
+        
         return message;
     }
 
