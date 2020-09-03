@@ -30,7 +30,6 @@ import ProgettoPO.ProgettoProgrammazione.models.review;
 import ProgettoPO.ProgettoProgrammazione.models.statResponce;
 import ProgettoPO.ProgettoProgrammazione.models.user;
 
-
 @RestController
 public class restController {
 	
