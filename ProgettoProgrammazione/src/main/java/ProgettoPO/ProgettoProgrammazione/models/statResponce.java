@@ -43,5 +43,12 @@ public class statResponce {
 	public void setStdDev(String stdDev) {
 		this.stdDev = stdDev;
 	}
-	
+	public String toString() {
+		return "{\r\n" + 
+				"    \"max_time\" : \""+this.getMax_time()+"\",\r\n" + 
+				"    \"min_time\" : \""+this.getMin_time()+"\",\r\n" + 
+				"    \"avarage\" : \""+this.getAvarage()+"\",\r\n" + 
+				"    \"devStd\" : \""+this.getStdDev()+"\",\r\n" + 
+				"}";
+	}
 }

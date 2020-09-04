@@ -14,15 +14,15 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
-
+import java.nio.file.InvalidPathException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ProgettoPO.ProgettoProgrammazione.handlers.dateFormatHandler;
+import ProgettoPO.ProgettoProgrammazione.handlers.jsonError;
 import ProgettoPO.ProgettoProgrammazione.models.review;
 import ProgettoPO.ProgettoProgrammazione.models.statResponce;
 import ProgettoPO.ProgettoProgrammazione.models.user;
-
 
 /**
  * 
@@ -37,7 +37,7 @@ public class memory {
 
 	static review r = new review();
 	
-	public static JSONArray listReview(String file) {
+	public static String listReview(String file){
 		String url = "https://api.dropboxapi.com/2/files/list_revisions";
 		String jsonBody = "{\r\n" + 
 				"    \"path\": \""+user.getPath()+"/"+file+"\",\r\n" + 
@@ -82,26 +82,23 @@ public class memory {
 					appoggio+="Review n° "+(reviews.size()-i)+"\n";
 					appoggio+= reviews.elementAt(i).toString()+"\n";
 				}
-				return arj;
+				return obj.toString();
 			} catch (ParseException e) {
-				// lettura mal eseguita
-				return null;
-			} 
-			
+				return new jsonError("Si è verificato un errore durante il parsing del JSON",500,"JSONParsingError").getJson();
+
+			}
 		}catch (IOException e) {
-			// TODO Auto-generated catch block
-			//errore path invalido
-			return null;
+			return new jsonError("Il file specificato non è presente nella cartella",404,"InvalidPathError").getJson();
 		}
 
 	}
 	
 	
-	public static statResponce getStats(String file) {
+	public static String getStats(String file){
 		reviews.removeAllElements();
 		memory.listReview(file); //popoliamo il vector con le review interessate
 		if(reviews.isEmpty()) {
-			return null;
+			return new jsonError("Il file specificato non è presente nella cartella",404,"InvalidPathError").getJson();
 		}
 		String appoggio = "";
 		statResponce sr = new statResponce();
@@ -130,8 +127,7 @@ public class memory {
 					if(difference>maxDifference) maxDifference = difference;
 					
 				} catch (java.text.ParseException e) {
-					// eccezione lettura date
-					return null;
+					return new jsonError("Si è verificato un errore durante il parsing delle date",500,"JSONParsingError").getJson();
 				}
 			}
 			
@@ -159,8 +155,7 @@ public class memory {
 					d1 = sdf.parse(data1);
 					totalTime =(long) Math.pow((d1.getTime()-avarage),2);
 				} catch (java.text.ParseException e) {
-					// TODO Auto-generated catch block
-					return null;
+					return new jsonError("Si è verificato un errore durante il parsing delle date",500,"JSONParsingError").getJson();
 				}
 				
 			}
@@ -169,7 +164,7 @@ public class memory {
 			sr.setMax_time(dateFormatHandler.toString(maxDifference));
 			sr.setMin_time(dateFormatHandler.toString(minDifference));
 			sr.setStdDev(dateFormatHandler.toString(deviazioneStandard));
-			return sr;
+			return sr.toString();
 		}
 	}
 }

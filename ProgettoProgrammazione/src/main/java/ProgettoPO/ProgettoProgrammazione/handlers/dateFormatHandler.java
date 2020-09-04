@@ -29,6 +29,8 @@ public class dateFormatHandler {
 				return (int)(millis/3600000)+"hh "+(int)((millis%3600000)/60000)+"mm "+ (int)((((millis%3600000)%60000))/1000)+"ss";
 			case "D":
 				return (int)(millis/86400000)+"DD "+(int)((millis%86400000)/3600000)+"hh " + (int)(((millis%86400000)%3600000)/60000)+"mm "+(int)((((millis%86400000)%3600000)%60000)/1000)+"ss ";                    
+			case "M":
+				return (int)(millis/Long.parseLong("2629800000"))+"MM "+(int)((millis%Long.parseLong("2629800000"))/86400000)+"DD "+(int)(((millis%Long.parseLong("2629800000"))%86400000)/3600000)+"hh "+(int)((((millis%Long.parseLong("2629800000"))%86400000)%3600000)/60000)+"mm "+(int)(((((millis%Long.parseLong("2629800000"))%86400000)%3600000)%60000)/1000)+"ss";
 		}
 		return "Errore durante la conversione di una data";
 	}

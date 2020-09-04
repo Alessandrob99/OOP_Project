@@ -16,12 +16,12 @@ import org.json.simple.parser.ParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class user {
-	static private String token;
-	static private String path;
+	static private String token = "";
+	static private String path = "";
 	static private boolean LOGGED_IN=false;
 	
 	
-	public static boolean checkToken(String token) {
+	public static void checkToken(String token) {
 		String url = "https://api.dropboxapi.com/2/check/user";
 		String jsonBody = "{\r\n" + 
 				"    \"query\": \"OK\"\r\n" + 
@@ -53,28 +53,28 @@ public class user {
 				appoggio = (String) obj.get("result");
 				if(appoggio.compareTo("OK")==0) {
 					user.setToken(token);
-					return true;
 				}else {
-					return false;
+					//eccezione token invalido
 				}
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
-				//eccezione token incorretto
-				return false;
+				//eccezione json convertito male
 			} 
 			
 		}catch (IOException e) {
 			// TODO Auto-generated catch block
 			//eccezione connessione mal eseguita
-			return false;
 		}
 		
 	}
 	
 	
 	public static void checkUser(String token,String path) {
-		boolean checktoken = user.checkToken(token);
-		if(checktoken) {
+		user.setPath("");
+		user.setToken("");
+		user.setLOGGED_IN(false);
+		user.checkToken(token);
+		if(user.getToken().compareTo("")!=0) {
 			//CheckPath
 			String url = "https://api.dropboxapi.com/2/files/list_folder";
 			String jsonBody = "{\r\n" + 
@@ -108,20 +108,7 @@ public class user {
 				} finally {
 					in.close();
 				}
-				appoggio ="Cartella trovata\nAl suo interno sono presenti i seguenti file :\n";
-				user.setPath(path);
-				try {
-					JSONObject obj = (JSONObject) JSONValue.parseWithException(data);
-					JSONArray arj = (JSONArray) obj.get("entries");
-					for(Object o : arj) {
-						obj = (JSONObject)o;
-						appoggio = appoggio+"\t"+obj.get("name")+" "+obj.get("size")+"bytes\n";
-					}
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					//Path incorretto exception
-				}
-				
+  				user.setPath(path);
 				user.setLOGGED_IN(true);
 				
 			}catch (IOException e) {
