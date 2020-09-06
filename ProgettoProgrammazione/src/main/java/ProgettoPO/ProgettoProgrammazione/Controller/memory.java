@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ProgettoPO.ProgettoProgrammazione.handlers.dateFormatHandler;
-import ProgettoPO.ProgettoProgrammazione.handlers.jsonError;
+import ProgettoPO.ProgettoProgrammazione.models.jsonError;
 import ProgettoPO.ProgettoProgrammazione.models.review;
 import ProgettoPO.ProgettoProgrammazione.models.statResponce;
 import ProgettoPO.ProgettoProgrammazione.models.user;
@@ -36,6 +36,8 @@ public class memory {
 
 
 	static review r = new review();
+	
+	
 	
 	public static String listReview(String file){
 		String url = "https://api.dropboxapi.com/2/files/list_revisions";
@@ -82,7 +84,7 @@ public class memory {
 					appoggio+="Review n° "+(reviews.size()-i)+"\n";
 					appoggio+= reviews.elementAt(i).toString()+"\n";
 				}
-				return obj.toString();
+				return arj.toJSONString();
 			} catch (ParseException e) {
 				return new jsonError("Si è verificato un errore durante il parsing del JSON",500,"JSONParsingError").getJson();
 
@@ -94,6 +96,9 @@ public class memory {
 	}
 	
 	
+	
+	
+	
 	public static String getStats(String file){
 		reviews.removeAllElements();
 		memory.listReview(file); //popoliamo il vector con le review interessate
@@ -103,7 +108,10 @@ public class memory {
 		String appoggio = "";
 		statResponce sr = new statResponce();
 		if(reviews.size()==1) {
-			return null; 
+			sr.setAvarage(dateFormatHandler.toString(0));
+			sr.setMax_time(dateFormatHandler.toString(0));
+			sr.setMin_time(dateFormatHandler.toString(0));
+			sr.setStdDev(dateFormatHandler.toString(0));
 		}else {
 			String data1="";
 			String data2="";
@@ -145,10 +153,10 @@ public class memory {
 					return null;
 				}
 			}
-			
-			totalTime = 0; //La variabile qui verrà usata come numeratore della deviazione standard
-			d2 = new Date(avarage);	//media delle date in cui sono state effettuate delle revisions
+			sr.setAvarage(dateFormatHandler.toString(avarage));
+			avarage = totalTime/(reviews.size());	//media delle date in cui sono state effettuate delle revisions
 			//Calcolo deviazione effettiva
+			totalTime = 0; //La variabile qui verrà usata come numeratore della deviazione standard
 			for(review r : reviews) {
 				data1 = r.getServer_modified().substring(0,r.getServer_modified().length()-1).substring(0,10)+" "+(r.getServer_modified().substring(0,r.getServer_modified().length()-1)).substring(11);
 				try {
@@ -160,12 +168,40 @@ public class memory {
 				
 			}
 			long deviazioneStandard = (long) (Math.sqrt((totalTime))/reviews.size()); 
-			sr.setAvarage(dateFormatHandler.toString(avarage));
+			
 			sr.setMax_time(dateFormatHandler.toString(maxDifference));
 			sr.setMin_time(dateFormatHandler.toString(minDifference));
 			sr.setStdDev(dateFormatHandler.toString(deviazioneStandard));
-			return sr.toString();
+			
 		}
+		return sr.toString();
+	}
+	
+	
+	
+	
+	
+	public static String getDailyRevs(String date,String file) {
+		String correctDate = dateFormatHandler.checkFormat(date);
+		if(correctDate.compareTo("")==0) {
+			return new jsonError("Ricontrollare la data inserita",400,"InvalidParametherError").getJson(); 
+		}
+		reviews.removeAllElements();
+		memory.listReview(file); //popoliamo il vector con le review interessate
+		if(reviews.isEmpty()) {
+			return new jsonError("Il file specificato non è presente nella cartella",404,"InvalidPathError").getJson();
+		}
+		JSONArray arj = new JSONArray();;
+		String modifiedAt[];
+		
+		for(review r : reviews) {
+			modifiedAt = r.getServer_modified().split("T");
+			if (modifiedAt[0].compareTo(correctDate)==0) {
+				arj.add(r);
+			}
+		}
+		if(arj==null) return "";
+		return arj.toJSONString();
 	}
 }
 

@@ -114,8 +114,18 @@ public class review {
 	public void setIs_downloadable(boolean is_downloadable) {
 		this.is_downloadable = is_downloadable;
 	}
-	
 	public String toString() {
-		return name+" /size : "+size+" bytes / client modified at : "+client_modified+" and server updated at : "+server_modified; 
+		return "{\r\n" + 
+				"        \"path_display\": \""+this.getPath_display()+"\",\r\n" + 
+				"        \"rev\": \""+this.getRev()+"\",\r\n" + 
+				"        \"size\": "+this.getSize()+",\r\n" + 
+				"        \"path_lower\": \""+this.getPath_lower()+"\",\r\n" + 
+				"        \"server_modified\": \""+this.getServer_modified()+"\",\r\n" + 
+				"        \"is_downloadable\": "+this.isIs_downloadable()+",\r\n" + 
+				"        \"name\": \""+this.getName()+"\",\r\n" + 
+				"        \"id\": \""+this.getId()+"\",\r\n" + 
+				"        \"content_hash\": \""+this.getContent_hash()+"\",\r\n" + 
+				"        \"client_modified\": \""+this.getClient_modified()+"\"\r\n" + 
+				"    }";
 	}
 }

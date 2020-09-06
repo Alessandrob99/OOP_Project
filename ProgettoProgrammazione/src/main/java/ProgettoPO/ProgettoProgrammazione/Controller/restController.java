@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ProgettoPO.ProgettoProgrammazione.handlers.jsonError;
+import ProgettoPO.ProgettoProgrammazione.models.jsonError;
 import ProgettoPO.ProgettoProgrammazione.models.review;
 import ProgettoPO.ProgettoProgrammazione.models.statResponce;
 import ProgettoPO.ProgettoProgrammazione.models.user;
@@ -34,12 +34,11 @@ import ProgettoPO.ProgettoProgrammazione.models.user;
 public class restController {
 	
 
-	
-	@PostMapping("/listRev/{file}")
-	public String List_Review(@PathVariable String file){
+	@PostMapping("/dailyRev/{file}")
+	public String Daily_Revs(@RequestParam(name = "date") String date,@PathVariable String file) {
 		if(user.isLOGGED_IN()) {
-			String outPut = memory.listReview(file);
-			return outPut;
+			String jsonOut = memory.getDailyRevs(date,file);
+			return jsonOut;
 		}else {
 			return new jsonError("L'utente non ha ancora effettuato il log-in",400,"UserNotLoggedError").getJson();
 		}
@@ -57,6 +56,18 @@ public class restController {
 		return jsonOut;
 	}
 	
+	@GetMapping("/listRev/{file}")
+	public String List_Review(@PathVariable String file){
+		if(user.isLOGGED_IN()) {
+			String jsonOut = memory.listReview(file);
+			return jsonOut;
+		}else {
+			return new jsonError("L'utente non ha ancora effettuato il log-in",400,"UserNotLoggedError").getJson();
+		}
+	}
+	
+	
+	
 	@GetMapping("/stats/{file}")
 	public String Stats(@PathVariable String file) {
 		if(user.isLOGGED_IN()) {
@@ -66,5 +77,6 @@ public class restController {
 			return new jsonError("L'utente non ha ancora effettuato il log-in",400,"UserNotLoggedError").getJson();
 		}
 	}
+	
 	
 }

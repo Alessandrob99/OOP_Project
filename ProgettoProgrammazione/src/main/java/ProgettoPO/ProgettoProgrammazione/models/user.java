@@ -112,9 +112,10 @@ public class user {
 				user.setLOGGED_IN(true);
 				
 			}catch (IOException e) {
-				// TODO Auto-generated catch block
-				//eccezione connesione mal eseguita;
+				user.setPath("InvalidPath");
 			}
+		}else {
+			user.setToken("InvalidToken");
 		}
 	}
 

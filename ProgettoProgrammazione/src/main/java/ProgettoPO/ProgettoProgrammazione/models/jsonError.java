@@ -1,6 +1,4 @@
-package ProgettoPO.ProgettoProgrammazione.handlers;
-
-import ProgettoPO.ProgettoProgrammazione.models.user;
+package ProgettoPO.ProgettoProgrammazione.models;
 
 public class jsonError {
 	
