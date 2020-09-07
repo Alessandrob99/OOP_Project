@@ -1,4 +1,4 @@
-package ProgettoPO.ProgettoProgrammazione.models;
+package OOP_Project.application.models;
 public class review {
 	private String name;
 	private String path_lower;

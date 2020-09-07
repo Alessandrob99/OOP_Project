@@ -1,4 +1,4 @@
-package ProgettoPO.ProgettoProgrammazione.models;
+package OOP_Project.application.models;
 
 import java.io.BufferedReader;
 import java.io.IOException;

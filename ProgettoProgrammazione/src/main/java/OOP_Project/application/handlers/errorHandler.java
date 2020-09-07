@@ -1,4 +1,4 @@
-package ProgettoPO.ProgettoProgrammazione.handlers;
+package OOP_Project.application.handlers;
 
 
 import java.nio.file.InvalidPathException;
@@ -22,13 +22,13 @@ public class errorHandler implements ErrorController {
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         String message = "-Errore-";
         if(statusCode == 404) {
-        	message = "-Errore- \nIl path fornito non è valido";
+        	message = "-Error- \nThe given path is not valid \nUse the /help rout to consult the guide";
         }
         if(statusCode == 500) {
-        	message = "-Errore- \nSi è verificato un problema all'interno del server";
+        	message = "-Error- \n An internal server error has occurred";
         }
         if(statusCode==400) {
-        	message = "-Errore- \nLa richiesta inviata risulta incompleta\nSi prega di ricontrollare i dati forniti";
+        	message = "-Error- \nThe request form is not correct \nUse the /help rout to consult the guide";
         }
         
         return message;

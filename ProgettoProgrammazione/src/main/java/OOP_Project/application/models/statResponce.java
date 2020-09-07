@@ -1,4 +1,4 @@
-package ProgettoPO.ProgettoProgrammazione.models;
+package OOP_Project.application.models;
 
 public class statResponce {
 	private String max_time=null;
