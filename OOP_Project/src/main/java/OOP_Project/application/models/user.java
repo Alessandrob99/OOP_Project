@@ -53,17 +53,13 @@ public class user {
 				appoggio = (String) obj.get("result");
 				if(appoggio.compareTo("OK")==0) {
 					user.setToken(token);
-				}else {
-					//eccezione token invalido
 				}
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				//eccezione json convertito male
+				
 			} 
 			
 		}catch (IOException e) {
-			// TODO Auto-generated catch block
-			//eccezione connessione mal eseguita
+			
 		}
 		
 	}

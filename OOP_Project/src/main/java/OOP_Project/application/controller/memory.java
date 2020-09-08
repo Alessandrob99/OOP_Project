@@ -158,7 +158,7 @@ public class memory {
 					if(difference>maxDifference) maxDifference = difference;
 					
 				} catch (java.text.ParseException e) {
-					return new jsonError("An error occurred during the date parsing",500,"JSONParsingError").getJson();
+					return new jsonError("An error occurred during the date parsing",500,"DateParsingError").getJson();
 				}
 			}
 			
@@ -185,7 +185,7 @@ public class memory {
 					d1 = sdf.parse(date1);
 					totalTime =(long) Math.pow((d1.getTime()-avarage),2);
 				} catch (java.text.ParseException e) {
-					return new jsonError("An error occurred during the date parsing",500,"JSONParsingError").getJson();
+					return new jsonError("An error occurred during the date parsing",500,"DateParsingError").getJson();
 				}
 				
 			}
@@ -215,7 +215,7 @@ public class memory {
 	public static String getDailyRevs(String date,String file) {
 		String correctDate = dateFormatHandler.checkFormat(date);
 		if(correctDate.compareTo("")==0) {
-			return new jsonError(" ",400,"InvalidParametherError").getJson(); 
+			return new jsonError("The specified date is not correct (respect the yyyy-mm-dd form)",400,"InvalidParametherError").getJson(); 
 		}
 		reviews.removeAllElements();
 		memory.listReview(file); 

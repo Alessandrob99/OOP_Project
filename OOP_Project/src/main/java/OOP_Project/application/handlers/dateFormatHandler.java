@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import OOP_Project.application.models.jsonError;
+
 
 
 public class dateFormatHandler {
@@ -48,7 +50,7 @@ public class dateFormatHandler {
 				return (int)(millis/Long.parseLong("2629800000"))+"MM "+(int)((millis%Long.parseLong("2629800000"))/86400000)+"DD "+(int)(((millis%Long.parseLong("2629800000"))%86400000)/3600000)+"hh "+(int)((((millis%Long.parseLong("2629800000"))%86400000)%3600000)/60000)+"mm "+(int)(((((millis%Long.parseLong("2629800000"))%86400000)%3600000)%60000)/1000)+"ss";
 			
 		}
-		return "Errore durante la conversione di una data";
+		return new jsonError("An error occurred during the date parsing",500,"DateParsingError").getJson();
 	}
 	
 	public static void setFormat(String format) {

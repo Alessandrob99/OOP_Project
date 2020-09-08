@@ -135,17 +135,17 @@ public class restController {
 		if(user.isLOGGED_IN()) {
 			return "ROUTS:\n-GET /listRev/(file_name)\nSpecifying a file name in this rout will return a list \n"
 					+ "of review linked to a set of information usefull to the identification\n"
-					+ "-GET /stats/(file_name)\nSpecifing a file name in this rout will return a JSONObject containing\n"
+					+ "-GET /stats/(file_name)\nSpecifying a file name in this rout will return a JSONObject containing\n"
 					+ "statistics regarding the time lapse between every revision made\n"
-					+ "standard delle reviews effettuate\nN.B. Nelle date MM=mesi DD=giorni hh=ore mm=minuti ss = secondi\n"
-					+ "-POST /dailyRev/(nome_file)\nSpecificando il nome di un file ed aggiungendo l'attributo data l'app ritornerà\n"
-					+ "una lista JSON contenente tutte le reviews (con relative informazioni) effettuate in quella data\n"
-					+ "(N.B. La data passata deve rispettare il formato anno-mese-giorno (Fondamentale il separatore '-')\n"
-					+ "-POST /check\nQuesta è la rotta riservata all'autenticazione dell'utente, bisogna passare come parametri\n"
-					+ "l'access TOKEN per collegarsi all'API Dropbox e il PATH della cartella in cui si intende lavorare\n"
-					+ "Quando l'utente sarà loggato potrà leggere nel JSON di ritorno il campo LOGGED_IN diventare true";
+					+ "(Date format :  MM=months DD=days hh=hours mm=minutes ss = seconds\n"
+					+ "-POST /dailyRev/(nome_file)\nSpecifying a file name and adding the date attribute the app will return  \n"
+					+ "a JSON list containing with all the reviews (and linked information) made on that date\n"
+					+ "(The date must be written respecting the yyyy-mm-DD form)\n"
+					+ "-POST /check\nThis is the rout that performs the user authentication, the user only needs\n"
+					+ "to specify the 'token' and 'path' attributes(access token to the DropBox API and folder path)\n"
+					+ "When the user gets his credentials checked a JSON object representing the LOGGED IN user is returned";
 		}else {
-			return new jsonError("L'utente non ha ancora effettuato il log-in",400,"UserNotLoggedError").getJson();
+			return new jsonError("The user must authenticate his credentials before using any rout",400,"UserNotLoggedError").getJson();
 		}
 		
 		
