@@ -1,5 +1,15 @@
 package OOP_Project.application.models;
 
+/**
+ * 
+ * @author Bedetta Alessandro
+ * 
+ * <p>
+ * This class allows to represent the json error object that is returned
+ * every time ,during runtime, an exception shows up.
+ * </p>
+ *
+ */
 public class jsonError {
 	
 	private String message;
@@ -11,6 +21,10 @@ public class jsonError {
 		this.error_code = error_code;
 		this.name = reason;
 	}
+	/**
+	 * 
+	 * @return A String containing the json error object
+	 */
 	public String getJson() {
 		return "{\r\n" + 
 				"    \"name\": \""+this.name+"\",\r\n" + 

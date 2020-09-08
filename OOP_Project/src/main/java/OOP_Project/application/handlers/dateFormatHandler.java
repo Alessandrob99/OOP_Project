@@ -10,13 +10,34 @@ import java.util.concurrent.TimeUnit;
 import OOP_Project.application.models.jsonError;
 
 
-
+/**
+ * 
+ *
+ * @author Alessandro Bedetta
+ * 
+ * <p>
+ * This class has been implemented to resolve all the problems regarding the dates 
+ * The methods in this class are all finalized to check,modify and adjust the dates' format.
+ * </p>
+ * 
+ *
+ */
 public class dateFormatHandler {
+	/**
+	 * String representing the wanted date format.
+	 */
 	private static String format;
+	/**
+	 * The class constructor sets the default date format.
+	 */
 	public dateFormatHandler() {
 		format = "yyyy-MM-dd HH:mm:ss";
 	}
-	
+	/**
+	 * 
+	 * @param milliSecs Represents the time lapse measured in milliseconds
+	 * @return A string representing the matching format for the specified time.
+	 */
 	public static String getFormat(long milliSecs) {
 		if(milliSecs==0) format = "";
 		if(milliSecs>=1000) format = "ss";
@@ -27,7 +48,12 @@ public class dateFormatHandler {
 		if(milliSecs>=Long.parseLong("31557600000")) format = "Y";
 		return format;
 	}
-	
+	/**
+	 * 
+	 * This method allows to convert a time lapse (milliseconds) into a String representing it
+	 * @param millis Represents the time lapse measured in milliseconds
+	 * @return The String representing the time with the correct format
+	 */
 	public static String toString(long millis) {
 		switch(dateFormatHandler.getFormat(millis)) {
 			case "":
@@ -56,7 +82,12 @@ public class dateFormatHandler {
 	public static void setFormat(String format) {
 		dateFormatHandler.format = format;
 	}
-	
+	/**
+	 * This method allows to check the validity of a date .
+	 * It also checks if the date is written in the correct form, if it's not, the method corrects it.
+	 * @param dateString The String representing the date to check.
+	 * @return A String containing the validated date.
+	 */
 	public static String checkFormat(String dateString) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
 		Date test;

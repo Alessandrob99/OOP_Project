@@ -1,4 +1,15 @@
 package OOP_Project.application.models;
+
+/**
+ * 	
+ * @author Bedetta Alessandro
+ * 
+ * <p>
+ * This class is used to store the information contained in a single review
+ * It has all the getters and setters methods and also an overridden toString method.
+ * </p>
+ *
+ */
 public class review {
 	private String name;
 	private String path_lower;
@@ -114,6 +125,11 @@ public class review {
 	public void setIs_downloadable(boolean is_downloadable) {
 		this.is_downloadable = is_downloadable;
 	}
+	/**
+	 * This is the overridden toString method that returns the String representation of the 
+	 * JSON Object containing the review instance.
+	 * 
+	 */
 	public String toString() {
 		return "{\r\n" + 
 				"        \"path_display\": \""+this.getPath_display()+"\",\r\n" + 

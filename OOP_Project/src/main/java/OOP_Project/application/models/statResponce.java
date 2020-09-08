@@ -1,5 +1,14 @@
 package OOP_Project.application.models;
-
+/**
+ * 	
+ * @author Bedetta Alessandro
+ * 
+ * <p>
+ * This class is used to store the information coming from the getStats method in the memory class
+ * It has all the getters and setters methods and also an overridden toString method.
+ * </p>
+ *
+ */
 public class statResponce {
 	private String max_time=null;
 	private String min_time=null;
@@ -43,6 +52,10 @@ public class statResponce {
 	public void setStdDev(String stdDev) {
 		this.stdDev = stdDev;
 	}
+	/**
+	 * This is the overridden toString method that returns the String representation of the 
+	 * JSON Object containing the statResponce instance.
+	 */
 	public String toString() {
 		return "{\r\n" + 
 				"    \"max_time\" : \""+this.getMax_time()+"\",\r\n" + 

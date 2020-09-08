@@ -35,8 +35,8 @@ import OOP_Project.application.models.user;
  * 
  * <p>
  * This class maps all the routes that the user can use.
- * each rout is linked to a specific method in the 'memory' class.
- * If the user hasn't had his credentials checked already,  he won't be able to access any rout
+ * each route is linked to a specific method in the 'memory' class.
+ * If the user hasn't had his credentials checked already,  he won't be able to access any route
  * Any any error that may show up during runtime in this phase is handled by the 'errorHandler' class
  * @see OOP_Project.application.controller.memory
  * OOP_Project.application.handlers.errorHandler
@@ -48,7 +48,7 @@ import OOP_Project.application.models.user;
 public class restController {
 	
 	/**
-	 * This rout allows the user to have a list of all the reviews made on a specific file on a precise day
+	 * This route allows the user to have a list of all the reviews made on a specific file on a precise day
 	 * 
 	 * @param data Indicating the date
 	 * @param file Indicating the file to analyze
@@ -60,13 +60,13 @@ public class restController {
 			String jsonOut = memory.getDailyRevs(date,file);
 			return jsonOut;
 		}else {
-			return new jsonError("The user must authenticate his credentials before using any rout",400,"UserNotLoggedError").getJson();
+			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError").getJson();
 		}
 	}
 	
 	/**
 	 * 
-	 * Once the user gives a directory path and an access token, this rout allows the credentials authentication
+	 * Once the user gives a directory path and an access token, this route allows the credentials authentication
 	 * @param token Indicating the access token to the DropBox API
 	 * @param path	Indicating the directory path (default = home folder)
 	 * @return If the authentication process goes well, a JSON representing the certified user is returned, otherwise the application responds with an error
@@ -86,7 +86,7 @@ public class restController {
 	
 	/**
 	 * 
-	 * This is the basic rout that allows the user to list all the reviews made on a specific file
+	 * This is the basic route that allows the user to list all the reviews made on a specific file
 	 * @param Indicates the file we want to check
 	 * @return A String representing a JSONArray filled with the list of all the file reviews
 	 */
@@ -97,7 +97,7 @@ public class restController {
 			String jsonOut = memory.listReview(file);
 			return jsonOut;
 		}else {
-			return new jsonError("The user must authenticate his credentials before using any rout",400,"UserNotLoggedError").getJson();
+			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError").getJson();
 		}
 	}
 	
@@ -113,7 +113,7 @@ public class restController {
 //	}
 	
 	/**
-	 * Once the user feeds a file name, this rout returns a set of statistics regarding timing between reviews
+	 * Once the user feeds a file name, this route returns a set of statistics regarding timing between reviews
 	 * @param file Indicating the file to analyze
 	 * @return Returns a JSON String containing all the statistics made and the relative values
 	 */
@@ -123,29 +123,29 @@ public class restController {
 			String jsonOut = memory.getStats(file);
 			return jsonOut;
 		}else {
-			return new jsonError("The user must authenticate his credentials before using any rout",400,"UserNotLoggedError").getJson();
+			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError").getJson();
 		}
 	}
 	/**
-	 * This rout allows the user to access a quick guide to all of the application features 
+	 * This route allows the user to access a quick guide to all of the application features 
 	 * @return A String of text ( the guide ) 
 	 */
 	@GetMapping("/help")
 	public String Help() {
 		if(user.isLOGGED_IN()) {
-			return "ROUTS:\n-GET /listRev/(file_name)\nSpecifying a file name in this rout will return a list \n"
+			return "routeES:\n-GET /listRev/(file_name)\nSpecifying a file name in this routee will return a list \n"
 					+ "of review linked to a set of information usefull to the identification\n"
-					+ "-GET /stats/(file_name)\nSpecifying a file name in this rout will return a JSONObject containing\n"
+					+ "-GET /stats/(file_name)\nSpecifying a file name in this routee will return a JSONObject containing\n"
 					+ "statistics regarding the time lapse between every revision made\n"
 					+ "(Date format :  MM=months DD=days hh=hours mm=minutes ss = seconds\n"
 					+ "-POST /dailyRev/(nome_file)\nSpecifying a file name and adding the date attribute the app will return  \n"
 					+ "a JSON list containing with all the reviews (and linked information) made on that date\n"
 					+ "(The date must be written respecting the yyyy-mm-DD form)\n"
-					+ "-POST /check\nThis is the rout that performs the user authentication, the user only needs\n"
+					+ "-POST /check\nThis is the routee that performs the user authentication, the user only needs\n"
 					+ "to specify the 'token' and 'path' attributes(access token to the DropBox API and folder path)\n"
 					+ "When the user gets his credentials checked a JSON object representing the LOGGED IN user is returned";
 		}else {
-			return new jsonError("The user must authenticate his credentials before using any rout",400,"UserNotLoggedError").getJson();
+			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError").getJson();
 		}
 		
 		

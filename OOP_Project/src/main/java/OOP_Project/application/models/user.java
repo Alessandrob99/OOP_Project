@@ -1,5 +1,10 @@
 package OOP_Project.application.models;
-
+/**
+ *<p>
+ *This class allows to store all the information regarding the user credentials once the authentication procedure is completed successfully
+ *</p> 
+ *
+ */
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +25,11 @@ public class user {
 	static private String path = "";
 	static private boolean LOGGED_IN=false;
 	
-	
+	/**
+	 * This method allows to check the access token by using a checkUser API request
+	 * if the token is certified the setToken method is called and the program proceeds to check the folder path
+	 * @param token Indicates the API access token given by the user.
+	 */
 	public static void checkToken(String token) {
 		String url = "https://api.dropboxapi.com/2/check/user";
 		String jsonBody = "{\r\n" + 
@@ -64,7 +73,12 @@ public class user {
 		
 	}
 	
-	
+	/**
+	 * If the checkToken methods confirms that the token is valid this method proceeds to check if the directory path.\
+	 * specified by the user is existing.
+	 * @param token The access token to check using checkToken method.
+	 * @param path The folder path to check.
+	 */
 	public static void checkUser(String token,String path) {
 		user.setPath("");
 		user.setToken("");
