@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import OOP_Project.application.models.jsonError;
 import OOP_Project.application.models.review;
-import OOP_Project.application.models.statResponce;
+import OOP_Project.application.models.statResponse;
 import OOP_Project.application.models.user;
 /**
  * 
@@ -50,15 +50,15 @@ public class restController {
 	/**
 	 * This route allows the user to have a list of all the reviews made on a specific file on a precise day
 	 * 
-	 * @param data Indicating the date
+	 * @param date Indicating the date
 	 * @param file Indicating the file to analyze
 	 * @return A String representing a JSONArray containing all the reviews.
 	 */
 	@PostMapping("/dailyRev/{file}")
 	public String Daily_Revs(@RequestParam(name = "date") String date,@PathVariable String file) {
-		if(user.isLOGGED_IN()) {
+		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
 			String jsonOut = memory.getDailyRevs(date,file);
-			return jsonOut;
+			return jsonOut;				//JSONArray as String of reviews made on the specified date
 		}else {
 			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError").getJson();
 		}
@@ -75,27 +75,27 @@ public class restController {
 	@PostMapping("/check")
 	public String Check_User(@RequestParam(name = "token") String token,@RequestParam(name = "path", defaultValue = "") String path) {
 		user.checkUser(token, path);
-		String jsonOut = "\r\n" + 
+		String jsonOut = "\r\n" + 		
 				"{\r\n" + 
 				"    \"path\": \""+user.getPath()+"\",\r\n" + 
 				"    \"token\": \""+user.getToken()+"\",\r\n" +
 				"    \"LOGGED_IN\": "+user.isLOGGED_IN()+",\r\n" + 
 				"}";
-		return jsonOut;
+		return jsonOut;			//Returning the Json representing the certified user
 	}
 	
 	/**
 	 * 
 	 * This is the basic route that allows the user to list all the reviews made on a specific file
-	 * @param Indicates the file we want to check
+	 * @param file Indicates the file we want to check
 	 * @return A String representing a JSONArray filled with the list of all the file reviews
 	 */
 	
 	@GetMapping("/listRev/{file}")
 	public String List_Review(@PathVariable String file){
-		if(user.isLOGGED_IN()) {
+		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
 			String jsonOut = memory.listReview(file);
-			return jsonOut;
+			return jsonOut; 			// JSONArray of reviews as String 
 		}else {
 			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError").getJson();
 		}
@@ -119,9 +119,9 @@ public class restController {
 	 */
 	@GetMapping("/stats/{file}")
 	public String Stats(@PathVariable String file) {
-		if(user.isLOGGED_IN()) {
+		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
 			String jsonOut = memory.getStats(file);
-			return jsonOut;
+			return jsonOut;				//JSONObject (statResponse) as String
 		}else {
 			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError").getJson();
 		}
@@ -132,7 +132,7 @@ public class restController {
 	 */
 	@GetMapping("/help")
 	public String Help() {
-		if(user.isLOGGED_IN()) {
+		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
 			return "routeES:\n-GET /listRev/(file_name)\nSpecifying a file name in this routee will return a list \n"
 					+ "of review linked to a set of information usefull to the identification\n"
 					+ "-GET /stats/(file_name)\nSpecifying a file name in this routee will return a JSONObject containing\n"

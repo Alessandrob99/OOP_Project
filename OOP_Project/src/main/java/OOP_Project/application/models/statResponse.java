@@ -9,19 +9,20 @@ package OOP_Project.application.models;
  * </p>
  *
  */
-public class statResponce {
+public class statResponse {
 	private String max_time=null;
 	private String min_time=null;
 	private String avarage=null;
 	private String stdDev=null;
-	public statResponce() {
+	
+	public statResponse() {			//Default Constructor 
 		super();
 		this.max_time = null;
 		this.min_time = null;
 		this.avarage = null;
 		this.stdDev = null;
 	}
-	public statResponce(String max_time, String min_time, String avarage, String stdDev) {
+	public statResponse(String max_time, String min_time, String avarage, String stdDev) {		//Constructor with parameters
 		super();
 		this.max_time = max_time;
 		this.min_time = min_time;

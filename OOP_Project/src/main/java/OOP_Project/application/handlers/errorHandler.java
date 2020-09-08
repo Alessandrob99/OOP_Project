@@ -37,8 +37,8 @@ public class errorHandler implements ErrorController {
     @ResponseBody
     public String handleError(HttpServletRequest request){
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        String message = "-Errore-";
-        if(statusCode == 404) {
+        String message = "-Error-";			//The error message
+        if(statusCode == 404) {			
         	message = "-Error- \nThe given path is not valid \nUse the /help route to consult the guide";
         }
         if(statusCode == 500) {

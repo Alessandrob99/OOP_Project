@@ -38,14 +38,14 @@ public class dateFormatHandler {
 	 * @param milliSecs Represents the time lapse measured in milliseconds
 	 * @return A string representing the matching format for the specified time.
 	 */
-	public static String getFormat(long milliSecs) {
+	public static String getFormat(long milliSecs) {	
 		if(milliSecs==0) format = "";
-		if(milliSecs>=1000) format = "ss";
-		if(milliSecs>=60000) format = "mm";	
-		if(milliSecs>=3600000) format = "hh";	
-		if(milliSecs>=86400000) format = "D";	
-		if(milliSecs>=Long.parseLong("2629800000")) format = "M";	
-		if(milliSecs>=Long.parseLong("31557600000")) format = "Y";
+		if(milliSecs>=1000) format = "ss";	//If the time in milliseconds is > of 1000 we are talking about seconds
+		if(milliSecs>=60000) format = "mm";	//If the time in milliseconds is > of 60000 we are talking about seconds
+		if(milliSecs>=3600000) format = "hh";	//If the time in milliseconds is > of 3600000 we are talking about seconds
+		if(milliSecs>=86400000) format = "D";	//If the time in milliseconds is > of 86400000 we are talking about seconds
+		if(milliSecs>=Long.parseLong("2629800000")) format = "M";	//If the time in milliseconds is > of 2629800000 we are talking about seconds
+		if(milliSecs>=Long.parseLong("31557600000")) format = "Y";	//If the time in milliseconds is > of 31557600000 we are talking about seconds
 		return format;
 	}
 	/**
@@ -55,7 +55,7 @@ public class dateFormatHandler {
 	 * @return The String representing the time with the correct format
 	 */
 	public static String toString(long millis) {
-		switch(dateFormatHandler.getFormat(millis)) {
+		switch(dateFormatHandler.getFormat(millis)) {  // This switch case allows to compose a string matching the correct format
 			case "":
 				return "0 ss";
 				
@@ -93,22 +93,22 @@ public class dateFormatHandler {
 		Date test;
 		
 		try {
-			test = sdf.parse(dateString);
+			test = sdf.parse(dateString); 		//if the parse of the date thrown an exception it means that it's not been written correctly
 		} catch (ParseException e) {
-			return "";
+			return "";							//if the date is invalid a blank String is returned
 		}
 		
-		String[] dateParse = dateString.split("-");
+		String[] dateParse = dateString.split("-");// these 3 controls allow to check if our date is 100% matching the date format on the listReviews response JSON
 		if((Integer.parseInt(dateParse[2])>31)||(Integer.parseInt(dateParse[1])>12)||(Integer.parseInt(dateParse[2])<1)||(Integer.parseInt(dateParse[1])<1)||(Integer.parseInt(dateParse[0])<1970)) return "";
 		
-		if((Integer.parseInt(dateParse[1])<10)&&(!dateParse[2].contains("0"))){
+		if((Integer.parseInt(dateParse[1])<10)&&(!dateParse[2].contains("0"))){  // changes 2020/9/08 in 2020/09/08
 			dateParse[1] = "0"+dateParse[1];
 		}
-		if((Integer.parseInt(dateParse[2])<10)&&(!dateParse[2].contains("0"))){
+		if((Integer.parseInt(dateParse[2])<10)&&(!dateParse[2].contains("0"))){	 // changes 2020/09/8 in 2020/09/08
 			dateParse[2] = "0"+dateParse[2];
 		}
 		if(test.after(new Date(System.currentTimeMillis()))) return "";
-		return dateParse[0]+"-"+dateParse[1]+"-"+dateParse[2];
+		return dateParse[0]+"-"+dateParse[1]+"-"+dateParse[2]; 					//The corrected string is reassembled and returned
 		
 	}
 	

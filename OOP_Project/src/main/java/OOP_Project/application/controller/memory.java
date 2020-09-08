@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import OOP_Project.application.handlers.dateFormatHandler;
 import OOP_Project.application.models.jsonError;
 import OOP_Project.application.models.review;
-import OOP_Project.application.models.statResponce;
+import OOP_Project.application.models.statResponse;
 import OOP_Project.application.models.user;
 
 /**
@@ -53,7 +53,7 @@ public class memory {
 	 * @return A String representing a JSONArray containing all the reviews made on that file.
 	 */
 	public static String listReview(String file){
-		String url = "https://api.dropboxapi.com/2/files/list_revisions";
+		String url = "https://api.dropboxapi.com/2/files/list_revisions"; 		
 		String jsonBody = "{\r\n" + 
 				"    \"path\": \""+user.getPath()+"/"+file+"\",\r\n" + 
 				"    \"mode\": \"path\",\r\n" + 
@@ -61,14 +61,14 @@ public class memory {
 				"}";
 		HttpURLConnection openConnection;
 		try {
-			openConnection = (HttpURLConnection) new URL(url).openConnection();
+			openConnection = (HttpURLConnection) new URL(url).openConnection();		//Opening connection and setting all the properties
 			openConnection.setRequestMethod("POST");
 			openConnection.setRequestProperty("Authorization",
 					"Bearer "+user.getToken()+"");
 			openConnection.setDoOutput(true);
-			openConnection.setRequestProperty("Content-Type", "application/json");
+			openConnection.setRequestProperty("Content-Type", "application/json");	
 			OutputStream os = openConnection.getOutputStream();
-			byte[] input = jsonBody.getBytes("utf-8");
+			byte[] input = jsonBody.getBytes("utf-8");									//the request is written in bytes and sent
 			os.write(input, 0, input.length);
 			InputStream in = openConnection.getInputStream();
 
@@ -77,35 +77,30 @@ public class memory {
 			try {
 				InputStreamReader inR = new InputStreamReader(in);
 				BufferedReader buf = new BufferedReader(inR);
-				data = buf.readLine();
+				data = buf.readLine();		//Opening an input stream to catch the response from the API
 			} finally {
-				in.close();
+				in.close();			
 			}
 			try {
 				review r = new review();
 				JSONObject obj = (JSONObject) JSONValue.parseWithException(data);
 				JSONArray arj = (JSONArray) obj.get("entries");
 				ObjectMapper objMap = new ObjectMapper();
-				reviews.removeAllElements();
+				reviews.removeAllElements();		//Before adding the reviews we refresh the vector, so we don't risk to duplicate any data
 				for(Object rev:arj) {
 					JSONObject obj1 = (JSONObject) rev;
-					app = obj1.toString();
+					app = obj1.toString();		
 					r = objMap.readValue(app,review.class);
-					reviews.add(r);
+					reviews.add(r);					//adding the reviews in the 'local memory'
 				}
-				app = "";
-				for(int i =0;i<reviews.size();i++) {
-					app+="Review n° "+(reviews.size()-i)+"\n";
-					app+= reviews.elementAt(i).toString()+"\n";
-				}
-				return arj.toJSONString();
+				return arj.toJSONString(); 			//The JSONArray vector is returned in string
 			} catch (ParseException e) {
 				return new jsonError("An error occurred during json parsing",500,"JSONParsingError").getJson();
 
 			}
 		}catch (IOException e) {
 			return new jsonError("The file hasn't been found in the current directory",404,"InvalidPathError").getJson();
-		}
+		}			//If the request fails it only means that the file is not in the directory, since the folder path has already been checked
 
 	}
 	
@@ -125,12 +120,14 @@ public class memory {
 	 */
 	public static String getStats(String file){
 		reviews.removeAllElements();
-		memory.listReview(file); 
+		memory.listReview(file); 		//'Downloading' all the reviews linked to the file to analyze
 		if(reviews.isEmpty()) {
 			return new jsonError("The file hasn't been found in the current directory",404,"InvalidPathError").getJson();
-		}
-		statResponce sr = new statResponce();
-		if(reviews.size()==1) {
+		}		//if there are no reviews it means that the file hasn't been uploaded and so it's not in the folder
+		
+		statResponse sr = new statResponse(); // instance of the request's response ( statResponse.class ) 
+		
+		if(reviews.size()==1) {		//If there's only 1 review all the values are set to 0 ( there are no time lapses between reviews ) 
 			sr.setAvarage(dateFormatHandler.toString(0));
 			sr.setMax_time(dateFormatHandler.toString(0));
 			sr.setMin_time(dateFormatHandler.toString(0));
@@ -138,7 +135,7 @@ public class memory {
 		}else {
 			String date1="";
 			String date2="";
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //The date format to read dates from the JSON
 			long difference=0;
 			long totalTime = 0;
 			long maxDifference = 0;
@@ -146,12 +143,13 @@ public class memory {
 			long avarage=0;
 			Date d1;
 			Date d2;
-			for(int i =0;(i<reviews.size()-1);i++) {
+			for(int i =0;(i<reviews.size()-1);i++) {//CALCULATING THE MINIMUM, MAXIMUM AND AVARAGE TIME BETWEEN 2 REVIEWS
+				//This 2 commands allow to parse the dates coming from the review , as in their basic form are not easy to elaborate 
 				date1=(reviews.elementAt(i).getServer_modified().substring(0,reviews.elementAt(i).getServer_modified().length()-1)).substring(0,10)+" "+(reviews.elementAt(i).getServer_modified().substring(0,reviews.elementAt(i).getServer_modified().length()-1)).substring(11);
 				date2=(reviews.elementAt(i+1).getServer_modified().substring(0,reviews.elementAt(i+1).getServer_modified().length()-1)).substring(0,10)+" "+(reviews.elementAt(i+1).getServer_modified().substring(0,reviews.elementAt(i+1).getServer_modified().length()-1)).substring(11);
 				try {
-					d1 = sdf.parse(date1);
-					d2 = sdf.parse(date2);
+					d1 = sdf.parse(date1);  //
+					d2 = sdf.parse(date2);  //Converting the parsed String dates to Date instances
 					difference = d1.getTime()-d2.getTime();
 					totalTime+=difference;
 					if(difference<minDifference) minDifference = difference;
@@ -162,41 +160,41 @@ public class memory {
 				}
 			}
 			
-			avarage = totalTime/(reviews.size()-1);
+			avarage = totalTime/(reviews.size()-1); 
 			
-			//Standard Dev
+			//CALCULATING THE standard deviation
 			totalTime = 0;
-			for(review r : reviews) {
+			for(review r : reviews) { // This for allows to calculate the average date on which the revisions were made
 				date1 = r.getServer_modified().substring(0,r.getServer_modified().length()-1).substring(0,10)+" "+(r.getServer_modified().substring(0,r.getServer_modified().length()-1)).substring(11);
 				try {
 					d1 = sdf.parse(date1);
-					totalTime += d1.getTime();
+					totalTime += d1.getTime(); 
 				} catch (java.text.ParseException e) {
 					// TODO Auto-generated catch block
-					return null;
+					return new jsonError("An error occurred during the date parsing",500,"DateParsingError").getJson();
 				}
 			}
 			sr.setAvarage(dateFormatHandler.toString(avarage));
-			avarage = totalTime/(reviews.size());	
+			avarage = totalTime/(reviews.size());	// average date , this information is necessary to calculate the standard deviation
 			totalTime = 0; 
 			for(review r : reviews) {
 				date1 = r.getServer_modified().substring(0,r.getServer_modified().length()-1).substring(0,10)+" "+(r.getServer_modified().substring(0,r.getServer_modified().length()-1)).substring(11);
 				try {
 					d1 = sdf.parse(date1);
-					totalTime =(long) Math.pow((d1.getTime()-avarage),2);
+					totalTime =(long) Math.pow((d1.getTime()-avarage),2);// Total time here acts as numerator for the deviation formula
 				} catch (java.text.ParseException e) {
 					return new jsonError("An error occurred during the date parsing",500,"DateParsingError").getJson();
 				}
 				
 			}
-			long devStandard = (long) (Math.sqrt((totalTime))/reviews.size()); 
+			long devStandard = (long) (Math.sqrt((totalTime))/reviews.size());  //Final formula for the deviation
 			
 			sr.setMax_time(dateFormatHandler.toString(maxDifference));
-			sr.setMin_time(dateFormatHandler.toString(minDifference));
+			sr.setMin_time(dateFormatHandler.toString(minDifference)); // All the response's field ate filled in;
 			sr.setStdDev(dateFormatHandler.toString(devStandard));
 			
 		}
-		return sr.toString();
+		return sr.toString(); // the response is returned
 	}
 	
 	
@@ -213,26 +211,26 @@ public class memory {
 	 * @return A String representing a JSONArray containing all the reviews the haven't been filtered.
 	 */
 	public static String getDailyRevs(String date,String file) {
-		String correctDate = dateFormatHandler.checkFormat(date);
-		if(correctDate.compareTo("")==0) {
+		String correctDate = dateFormatHandler.checkFormat(date); //the date is sent to the dateFormatHandler for checking
+		if(correctDate.compareTo("")==0) {//If the date is invalid an error is returned
 			return new jsonError("The specified date is not correct (respect the yyyy-mm-dd form)",400,"InvalidParametherError").getJson(); 
 		}
 		reviews.removeAllElements();
-		memory.listReview(file); 
-		if(reviews.isEmpty()) {
+		memory.listReview(file); // The reviews vector is refreshed
+		if(reviews.isEmpty()) {	// If the download fails an error is returned
 			return new jsonError("The file hasn't been found in the current directory",404,"InvalidPathError").getJson();
 		}
-		JSONArray arj = new JSONArray();;
+		JSONArray arj = new JSONArray(); //The array that will contain the non-filtered reviews
 		String modifiedAt[];
 		
 		for(review r : reviews) {
 			modifiedAt = r.getServer_modified().split("T");
-			if (modifiedAt[0].compareTo(correctDate)==0) {
+			if (modifiedAt[0].compareTo(correctDate)==0) {	//If the date on the review is the same date specified by the user the instance is added to the array
 				arj.add(r);
 			}
 		}
-		if(arj==null) return "";
-		return arj.toJSONString();
+		if(arj==null) return "";	//If there are no matching reviews the method returns an empty String.
+		return arj.toJSONString(); // The String representing the JSONArray is returned.
 	}
 	
 	
