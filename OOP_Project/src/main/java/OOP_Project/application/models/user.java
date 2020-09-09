@@ -158,7 +158,7 @@ public class user {
 	public static void setLOGGED_IN(boolean lOGGED_IN) {
 		LOGGED_IN = lOGGED_IN;
 	}
-
+	
 
 	
 }

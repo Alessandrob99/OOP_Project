@@ -63,20 +63,20 @@ public class dateFormatHandler {
 				return (millis/1000)+"ss";
 				
 			case "mm":
-				return (millis/60000)+"mm "
-						+ ((millis%60000)/1000)+"ss ";
+				return (millis/60000)+"mm"
+						+ ((millis%60000)/1000)+"ss";
 				
 			case "hh": 
-				return (int)(millis/3600000)+"hh "+(int)((millis%3600000)/60000)+"mm "+ (int)((((millis%3600000)%60000))/1000)+"ss";
+				return (int)(millis/3600000)+"hh"+(int)((millis%3600000)/60000)+"mm"+ (int)((((millis%3600000)%60000))/1000)+"ss";
 				
 			case "D":
-				return (int)(millis/86400000)+"DD "+(int)((millis%86400000)/3600000)+"hh " + (int)(((millis%86400000)%3600000)/60000)+"mm "+(int)((((millis%86400000)%3600000)%60000)/1000)+"ss ";                    
+				return (int)(millis/86400000)+"DD"+(int)((millis%86400000)/3600000)+"hh" + (int)(((millis%86400000)%3600000)/60000)+"mm"+(int)((((millis%86400000)%3600000)%60000)/1000)+"ss ";                    
 				
 			case "M":
 				return (int)(millis/Long.parseLong("2629800000"))+"MM "+(int)((millis%Long.parseLong("2629800000"))/86400000)+"DD "+(int)(((millis%Long.parseLong("2629800000"))%86400000)/3600000)+"hh "+(int)((((millis%Long.parseLong("2629800000"))%86400000)%3600000)/60000)+"mm "+(int)(((((millis%Long.parseLong("2629800000"))%86400000)%3600000)%60000)/1000)+"ss";
 			
 		}
-		return new jsonError("An error occurred during the date parsing",500,"DateParsingError").getJson();
+		return new jsonError("An error occurred during the date parsing",500,"DateParsingError").toString();
 	}
 	
 	public static void setFormat(String format) {

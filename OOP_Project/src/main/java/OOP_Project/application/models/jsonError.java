@@ -21,15 +21,29 @@ public class jsonError {
 		this.error_code = error_code;
 		this.name = reason;
 	}
-	/**
-	 * 
-	 * @return A String containing the json error object
-	 */
-	public String getJson() {
-		return "{\r\n" + 
-				"    \"name\": \""+this.name+"\",\r\n" + 
-				"    \"description\": \""+this.message+"\",\r\n" + 
-				"    \"error_code\": "+this.error_code+"\r\n" + 
-				"}";
+	public jsonError() {
+		super();
+		this.message = "";
+		this.error_code = 0;
+		this.name = "";
 	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public int getError_code() {
+		return error_code;
+	}
+	public void setError_code(int error_code) {
+		this.error_code = error_code;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 }

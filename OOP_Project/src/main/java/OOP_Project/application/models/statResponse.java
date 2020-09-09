@@ -53,16 +53,5 @@ public class statResponse {
 	public void setStdDev(String stdDev) {
 		this.stdDev = stdDev;
 	}
-	/**
-	 * This is the overridden toString method that returns the String representation of the 
-	 * JSON Object containing the statResponce instance.
-	 */
-	public String toString() {
-		return "{\r\n" + 
-				"    \"max_time\" : \""+this.getMax_time()+"\",\r\n" + 
-				"    \"min_time\" : \""+this.getMin_time()+"\",\r\n" + 
-				"    \"avarage\" : \""+this.getAvarage()+"\",\r\n" + 
-				"    \"devStd\" : \""+this.getStdDev()+"\",\r\n" + 
-				"}";
-	}
+
 }

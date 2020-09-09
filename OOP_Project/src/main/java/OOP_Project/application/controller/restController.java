@@ -49,68 +49,77 @@ public class restController {
 	
 	/**
 	 * This route allows the user to have a list of all the reviews made on a specific file on a precise day
+	 * If the user specifies 'all' in the route, all the reviews made on that day are shown
 	 * 
 	 * @param date Indicating the date
 	 * @param file Indicating the file to analyze
 	 * @return A String representing a JSONArray containing all the reviews.
 	 */
 	@PostMapping("/dailyRev/{file}")
-	public String Daily_Revs(@RequestParam(name = "date") String date,@PathVariable String file) {
+	public Object Daily_Revs(@RequestParam(name = "date") String date,@PathVariable String file ) {
 		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
-			String jsonOut = memory.getDailyRevs(date,file);
-			return jsonOut;				//JSONArray as String of reviews made on the specified date
+			if(file.compareTo("all")!=0) {
+				return memory.getDailyRevs(date,file);	//JSONArray of reviews made on the specified date				
+			}else {
+				return memory.getAllDailyRevs(date);
+			}
 		}else {
-			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError").getJson();
+			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError");
 		}
 	}
+	
+	@PostMapping("/weeklyRev/{file}")
+	public Object Weekly_Revs(@RequestParam(name = "date") String date,@PathVariable String file ) {
+		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
+			if(file.compareTo("all")!=0) {
+				return memory.getWeeklyRevs(date,file);	//JSONArray of reviews made on the week matching that date on the file				
+			}else {
+				return memory.getAllWeeklyRevs(date);	//JSONArray of reviews made on the week matching that date
+			}
+		}else {
+			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError");
+		}
+	}
+	
+	
+	@GetMapping("/test")
+	public Object Test() {
+		return jsonError.class.getDeclaredFields();
+		
+	}
+	
+	
 	
 	/**
 	 * 
 	 * Once the user gives a directory path and an access token, this route allows the credentials authentication
 	 * @param token Indicating the access token to the DropBox API
 	 * @param path	Indicating the directory path (default = home folder)
-	 * @return If the authentication process goes well, a JSON representing the certified user is returned, otherwise the application responds with an error
+	 * @return True if the authentication process goes well, false otherwise
 	 */
 	
 	@PostMapping("/check")
-	public String Check_User(@RequestParam(name = "token") String token,@RequestParam(name = "path", defaultValue = "") String path) {
+	public boolean Check_User(@RequestParam(name = "token") String token,@RequestParam(name = "path", defaultValue = "") String path) {
 		user.checkUser(token, path);
-		String jsonOut = "\r\n" + 		
-				"{\r\n" + 
-				"    \"path\": \""+user.getPath()+"\",\r\n" + 
-				"    \"token\": \""+user.getToken()+"\",\r\n" +
-				"    \"LOGGED_IN\": "+user.isLOGGED_IN()+",\r\n" + 
-				"}";
-		return jsonOut;			//Returning the Json representing the certified user
+		return user.isLOGGED_IN();		//Returning true if the credentials are certified, or false if not
 	}
 	
 	/**
 	 * 
 	 * This is the basic route that allows the user to list all the reviews made on a specific file
 	 * @param file Indicates the file we want to check
-	 * @return A String representing a JSONArray filled with the list of all the file reviews
+	 * @return A JSONArray filled with the list of all the file reviews
 	 */
 	
 	@GetMapping("/listRev/{file}")
-	public String List_Review(@PathVariable String file){
+	public Object List_Review(@PathVariable String file){
 		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
-			String jsonOut = memory.listReview(file);
-			return jsonOut; 			// JSONArray of reviews as String 
+			return memory.listReview(file); // JSONArray of reviews
+			 			
 		}else {
-			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError").getJson();
+			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError");
 		}
 	}
-	
-	
-//	@GetMapping("/getMeta")
-//	public String Get_Metadata() {
-//		if(user.isLOGGED_IN()) {
-//			String jsonOut = memory.getMetaData();
-//			return jsonOut;
-//		}else {
-//			return new jsonError("L'utente non ha ancora effettuato il log-in",400,"UserNotLoggedError").getJson();
-//		}
-//	}
 	
 	/**
 	 * Once the user feeds a file name, this route returns a set of statistics regarding timing between reviews
@@ -118,12 +127,12 @@ public class restController {
 	 * @return Returns a JSON String containing all the statistics made and the relative values
 	 */
 	@GetMapping("/stats/{file}")
-	public String Stats(@PathVariable String file) {
+	public Object Stats(@PathVariable String file) {
 		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
-			String jsonOut = memory.getStats(file);
-			return jsonOut;				//JSONObject (statResponse) as String
+			 return memory.getStats(file); //JSONObject (statResponse) 
+
 		}else {
-			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError").getJson();
+			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError");
 		}
 	}
 	/**
@@ -131,21 +140,26 @@ public class restController {
 	 * @return A String of text ( the guide ) 
 	 */
 	@GetMapping("/help")
-	public String Help() {
+	public Object Help() {
 		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
-			return "routeES:\n-GET /listRev/(file_name)\nSpecifying a file name in this routee will return a list \n"
-					+ "of review linked to a set of information usefull to the identification\n"
+			return "ROUTES:\n-GET /listRev/(file_name)\nSpecifying a file name in this routee will return a list \n"
+					+ "of review linked to a set of information usefull to the identification\n\n"
 					+ "-GET /stats/(file_name)\nSpecifying a file name in this routee will return a JSONObject containing\n"
 					+ "statistics regarding the time lapse between every revision made\n"
-					+ "(Date format :  MM=months DD=days hh=hours mm=minutes ss = seconds\n"
-					+ "-POST /dailyRev/(nome_file)\nSpecifying a file name and adding the date attribute the app will return  \n"
-					+ "a JSON list containing with all the reviews (and linked information) made on that date\n"
-					+ "(The date must be written respecting the yyyy-mm-DD form)\n"
+					+ "(Date format :  MM=months DD=days hh=hours mm=minutes ss = seconds\n\n"
+					+ "-POST /dailyRev/(file_name/all)\nSpecifying a file name and adding the date attribute the app will return  \n"
+					+ "a JSON arrray containing all the reviews (+ linked information) made on that date\n"
+					+ "If 'all' is passed instead of the file name, all the review made on that day will be returned.\n"
+					+ "(The date must be written respecting the yyyy-mm-DD form)\n\n"
+					+ "-POST /weeklyRev/(file_name/all)\nSpecifying a file name and adding the date attribute the app will return  \n"
+					+ "a JSON arrray containing a counter and all the reviews (+ linked information) made on the week matched to that day\n"
+					+ "If 'all' is passed instead of the file name, all the review made on the corresponding week will be returned.\n"
+					+ "(The date must be written respecting the yyyy-mm-DD form)\n\n"
 					+ "-POST /check\nThis is the routee that performs the user authentication, the user only needs\n"
 					+ "to specify the 'token' and 'path' attributes(access token to the DropBox API and folder path)\n"
-					+ "When the user gets his credentials checked a JSON object representing the LOGGED IN user is returned";
+					+ "A boolean indicating if the credentials are valid or not is returned";
 		}else {
-			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError").getJson();
+			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError");
 		}
 		
 		
