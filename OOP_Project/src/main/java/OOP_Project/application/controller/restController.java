@@ -122,6 +122,21 @@ public class restController {
 	}
 	
 	/**
+	 * This route allows the user to get metadata from the directory
+	 * @param file If the user indicates a single file he gets metadata from that file only, if he indicates 'all' then he gets the metadata of all the files
+	 * @return An object containing the single file data or a JSONArray with all the files' metadata
+	 */
+	@GetMapping("/metadata/{file}")
+	public Object getMetadata(@PathVariable String file) {
+		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
+			return memory.getMetadata(file); // JSONArray of metadata
+			 			
+		}else {
+			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError");
+		}
+	}
+	
+	/**
 	 * Once the user feeds a file name, this route returns a set of statistics regarding timing between reviews
 	 * @param file Indicating the file to analyze
 	 * @return Returns a JSON String containing all the statistics made and the relative values
@@ -155,6 +170,9 @@ public class restController {
 					+ "a JSON arrray containing a counter and all the reviews (+ linked information) made on the week matched to that day\n"
 					+ "If 'all' is passed instead of the file name, all the review made on the corresponding week will be returned.\n"
 					+ "(The date must be written respecting the yyyy-mm-DD form)\n\n"
+					+ "-GET /metadata/(file_name/all)\nThis route allows the user to get metadata from the directory\n"
+					+ "If the user indicates a single file he gets metadata from that file only, if he indicates 'all'\n "
+					+ "then he gets the metadata of all the files.\n\n"
 					+ "-POST /check\nThis is the routee that performs the user authentication, the user only needs\n"
 					+ "to specify the 'token' and 'path' attributes(access token to the DropBox API and folder path)\n"
 					+ "A boolean indicating if the credentials are valid or not is returned";

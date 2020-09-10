@@ -410,8 +410,79 @@ public class memory {
 		}
 		return new dailyRevsResponse(weeklyRevs);
 	}
+
+	/**
+	 * This method handles the metadata request by checking the file name given by the user
+	 * If its a regular file name the getFileMetadata is called and the response is returned
+	 * If the file name is 'all' then the getFileMetadata is called for every file in the directory
+	 * @param file The parameter which specifies if we want to work on a particular file or on all of them
+	 * @return	An Object representing the file metadata or a JSONArray containing all the metadata
+	 */
+	public static Object getMetadata(String file) {
+		if(file.compareTo("all")==0) {
+			ArrayList<String> files = new ArrayList();		//file names in the directory
+			files = (ArrayList<String>) memory.listFolder();	//We use listFolder method to get all the names
+			JSONArray metadata = new JSONArray();
+			JSONObject o = new JSONObject();
+			for(String name : files) {
+				o = (JSONObject) memory.getFileMetadata(name); // We get data from each file
+				metadata.add(o);
+			}
+			return metadata;
+		}else {
+			return memory.getFileMetadata(file);	//Returns the single file's metadata
+		}
+	}	
 	
+	/**
+	 * 
+	 * This method organizes the parameters to send the getMetdata request for a single file
+	 * @param fileName The file we want to get the data from
+	 * @return An object containing the metadata
+	 */
+	public static Object getFileMetadata(String fileName) {
+		String url = "https://api.dropboxapi.com/2/files/get_metadata";
+		String jsonBody = "{\r\n" + 
+				"    \"path\": \""+user.getPath()+"/"+fileName+"\",\r\n" + 
+				"    \"include_media_info\": false,\r\n" + 
+				"    \"include_deleted\": false,\r\n" + 
+				"    \"include_has_explicit_shared_members\": false\r\n" + 
+				"}";
+		HttpURLConnection openConnection;
+		try {
+			openConnection = (HttpURLConnection) new URL(url).openConnection(); //Opening connection and setting all the properties
+			openConnection.setRequestMethod("POST");
+			openConnection.setRequestProperty("Authorization",
+					"Bearer "+user.getToken());
+			openConnection.setDoOutput(true);
+			openConnection.setRequestProperty("Content-Type", "application/json");
+			OutputStream os = openConnection.getOutputStream();
+			byte[] input = jsonBody.getBytes("utf-8");
+			os.write(input, 0, input.length);									//the request is written in bytes and sent
+			InputStream in = openConnection.getInputStream();
+
+			String data = "";
+			String appoggio = "";
+			try {
+				InputStreamReader inR = new InputStreamReader(in);
+				BufferedReader buf = new BufferedReader(inR);	//Opening an input stream to catch the response from the API
+				data = buf.readLine();
+
+			} finally {
+				in.close();
+			}
+			try {
+				return (JSONObject) JSONValue.parseWithException(data);
+			} catch (ParseException e) {
+				return new jsonError("An error occurred while parsing json response",500,"JSON PArsi");	
+			}
+		}catch (IOException e) {
+			return new jsonError("An error occurred while retreiving metadata",500,"RequestError");	
+		}
+	}
+
+
+
+
 	
 }
-
-
