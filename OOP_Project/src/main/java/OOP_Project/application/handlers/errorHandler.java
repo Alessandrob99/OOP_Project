@@ -1,8 +1,6 @@
 package OOP_Project.application.handlers;
 
 
-import java.nio.file.InvalidPathException;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.boot.web.servlet.error.ErrorController;

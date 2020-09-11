@@ -1,33 +1,16 @@
 package OOP_Project.application.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Vector;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import OOP_Project.application.models.jsonError;
-import OOP_Project.application.models.review;
-import OOP_Project.application.models.statResponse;
 import OOP_Project.application.models.user;
 /**
  * 
@@ -35,11 +18,11 @@ import OOP_Project.application.models.user;
  * 
  * <p>
  * This class maps all the routes that the user can use.
- * each route is linked to a specific method in the 'memory' class.
- * If the user hasn't had his credentials checked already,  he won't be able to access any route
- * Any any error that may show up during runtime in this phase is handled by the 'errorHandler' class
+ * Each route is linked to a specific method in the 'memory' class.
+ * If the user hasn't had his credentials checked already,  he won't be able to access any route.
+ * Any error that may show up during runtime in this phase is handled by the 'errorHandler' class
  * @see OOP_Project.application.controller.memory
- * OOP_Project.application.handlers.errorHandler
+ * @see OOP_Project.application.handlers.errorHandler
  * </p>
  * 
  *
@@ -48,12 +31,32 @@ import OOP_Project.application.models.user;
 public class restController {
 	
 	/**
-	 * This route allows the user to have a list of all the reviews made on a specific file on a precise day
-	 * If the user specifies 'all' in the route, all the reviews made on that day are shown
+	 * 
+	 * This is the basic route that allows the user to list all the reviews made on a specific file
+	 * @see OOP_Project.application.controller.memory
+	 * @param file Indicates the file we want to check
+	 * @return A JSONArray filled with the list of all the file reviews
+	 */
+	
+	@GetMapping("/listRev/{file}")
+	public Object List_Review(@PathVariable String file){
+		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
+			return memory.listReview(file); // JSONArray of reviews
+			 			
+		}else {
+			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError");
+		}
+	}
+	
+	/**
+	 * This route allows the user to have a list of all the reviews made on a specific day.
+	 * If a file name is specified the 'getDailyRevs' method is called
+	 * If a 'all' is specified the 'getAllDailyRevs' method is called
 	 * 
 	 * @param date Indicating the date
-	 * @param file Indicating the file to analyze
-	 * @return A String representing a JSONArray containing all the reviews.
+	 * @param file If we indicate a file name the program returns the reviews made on that file, if we pass 'all' the reviews are searched on every file of the folder
+	 * 
+	 * @return A dailyRevsResponse instance containing all the reviews and a counter
 	 */
 	@PostMapping("/dailyRev/{file}")
 	public Object Daily_Revs(@RequestParam(name = "date") String date,@PathVariable String file ) {
@@ -68,6 +71,15 @@ public class restController {
 		}
 	}
 	
+	/**
+	 * 
+	 * This route allows the user to check how many reviews have been made in a specific week.
+	 * If a file name is specified the 'getWeeklyRevs' method is called
+	 * If a 'all' is specified the 'getAllWeeklyRevs' method is called
+	 * @param date The week is passed by passing a date, the system automatically finds the corresponding week
+	 * @param file If we indicate a file name the program returns the reviews made on that file, if we pass 'all' the reviews are searched on every file of the folder
+	 * @return A dailyRevsResponse instance containing all the reviews and a counter
+	 */
 	@PostMapping("/weeklyRev/{file}")
 	public Object Weekly_Revs(@RequestParam(name = "date") String date,@PathVariable String file ) {
 		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
@@ -82,17 +94,13 @@ public class restController {
 	}
 	
 	
-	@GetMapping("/test")
-	public Object Test() {
-		return jsonError.class.getDeclaredFields();
-		
-	}
-	
+
 	
 	
 	/**
 	 * 
 	 * Once the user gives a directory path and an access token, this route allows the credentials authentication
+	 * @see OOP_Project.application.models.user
 	 * @param token Indicating the access token to the DropBox API
 	 * @param path	Indicating the directory path (default = home folder)
 	 * @return True if the authentication process goes well, false otherwise
@@ -104,22 +112,7 @@ public class restController {
 		return user.isLOGGED_IN();		//Returning true if the credentials are certified, or false if not
 	}
 	
-	/**
-	 * 
-	 * This is the basic route that allows the user to list all the reviews made on a specific file
-	 * @param file Indicates the file we want to check
-	 * @return A JSONArray filled with the list of all the file reviews
-	 */
-	
-	@GetMapping("/listRev/{file}")
-	public Object List_Review(@PathVariable String file){
-		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
-			return memory.listReview(file); // JSONArray of reviews
-			 			
-		}else {
-			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError");
-		}
-	}
+
 	
 	/**
 	 * This route allows the user to get metadata from the directory
@@ -139,7 +132,7 @@ public class restController {
 	/**
 	 * Once the user feeds a file name, this route returns a set of statistics regarding timing between reviews
 	 * @param file Indicating the file to analyze
-	 * @return Returns a JSON String containing all the statistics made and the relative values
+	 * @return Returns a JSON containing all the statistics made and the relative values
 	 */
 	@GetMapping("/stats/{file}")
 	public Object Stats(@PathVariable String file) {
@@ -172,7 +165,7 @@ public class restController {
 					+ "(The date must be written respecting the yyyy-mm-DD form)\n\n"
 					+ "-GET /metadata/(file_name/all)\nThis route allows the user to get metadata from the directory\n"
 					+ "If the user indicates a single file he gets metadata from that file only, if he indicates 'all'\n "
-					+ "then he gets the metadata of all the files.\n\n"
+					+ "then he gets the metadata of all the files in the directory.\n\n"
 					+ "-POST /check\nThis is the routee that performs the user authentication, the user only needs\n"
 					+ "to specify the 'token' and 'path' attributes(access token to the DropBox API and folder path)\n"
 					+ "A boolean indicating if the credentials are valid or not is returned";

@@ -8,9 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * 
  * @author Bedetta Alessandro
  * 
- * 
+ * <p>
  *<em>This class starts the web rest application</em>
  *@version 1.5
+ *</p>
  */
 @SpringBootApplication
 public class Application {

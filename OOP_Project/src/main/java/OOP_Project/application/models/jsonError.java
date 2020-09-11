@@ -11,9 +11,17 @@ package OOP_Project.application.models;
  *
  */
 public class jsonError {
-	
-	private String message; 	//each error is composed by a code, a name and a brief description
+	/**
+	 * A message describing the error
+	 */
+	private String message; 	
+	/**
+	 * A code to classify the error
+	 */
 	private int error_code;
+	/**
+	 * A name to identify the error
+	 */
 	private String name;
 	public jsonError(String message, int error_code, String reason) {
 		super();

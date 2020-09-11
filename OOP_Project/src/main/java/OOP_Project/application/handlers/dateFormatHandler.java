@@ -2,10 +2,7 @@ package OOP_Project.application.handlers;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import OOP_Project.application.models.jsonError;
 
@@ -16,7 +13,7 @@ import OOP_Project.application.models.jsonError;
  * @author Alessandro Bedetta
  * 
  * <p>
- * This class has been implemented to resolve all the problems regarding the dates 
+ * This class has been implemented to resolve all the problems regarding the dates.
  * The methods in this class are all finalized to check,modify and adjust the dates' format.
  * </p>
  * 
@@ -28,13 +25,13 @@ public class dateFormatHandler {
 	 */
 	private static String format;
 	/**
-	 * The class constructor sets the default date format.
+	 * The class constructor sets the default date format ("yyyy-MM-dd HH:mm:ss").
 	 */
 	public dateFormatHandler() {
 		format = "yyyy-MM-dd HH:mm:ss";
 	}
 	/**
-	 * 
+	 * This method allows the toString method to know which is the correct format to use.
 	 * @param milliSecs Represents the time lapse measured in milliseconds
 	 * @return A string representing the matching format for the specified time.
 	 */
@@ -49,8 +46,7 @@ public class dateFormatHandler {
 		return format;
 	}
 	/**
-	 * 
-	 * This method allows to convert a time lapse (milliseconds) into a String representing it
+	 * This method returns an easy-to-read string representation of a time measure.
 	 * @param millis Represents the time lapse measured in milliseconds
 	 * @return The String representing the time with the correct format
 	 */

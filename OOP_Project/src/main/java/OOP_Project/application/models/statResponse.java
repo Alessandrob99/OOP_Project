@@ -10,9 +10,21 @@ package OOP_Project.application.models;
  *
  */
 public class statResponse {
+	/**
+	 * Maximum time between 2 reviews
+	 */
 	private String max_time=null;
+	/**
+	 * Minimum time between 2 reviews
+	 */
 	private String min_time=null;
+	/**
+	 * Average time between 2 reviews
+	 */
 	private String avarage=null;
+	/**
+	 * Standard deviation made on all the reviews
+	 */
 	private String stdDev=null;
 	
 	public statResponse() {			//Default Constructor 

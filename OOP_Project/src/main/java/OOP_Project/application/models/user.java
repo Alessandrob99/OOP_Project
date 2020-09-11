@@ -20,9 +20,22 @@ import org.json.simple.parser.ParseException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import OOP_Project.application.handlers.requestHandler;
+import OOP_Project.application.models.exceptions.invalidPathException;
+import OOP_Project.application.models.exceptions.invalidTokenException;
+
 public class user {
+	/**
+	 * The DropBox API access token
+	 */
 	static private String token = "";
+	/**
+	 * The path indicating the directory we want to work with
+	 */
 	static private String path = "";
+	/**
+	 * A boolean indicating whether the user is logged in or not
+	 */
 	static private boolean LOGGED_IN=false;
 	
 	/**
@@ -31,32 +44,21 @@ public class user {
 	 * @param token Indicates the API access token given by the user.
 	 */
 	public static void checkToken(String token) {
+		user.setToken(token);
 		String url = "https://api.dropboxapi.com/2/check/user";				//To validate the token we use the checkUser request
 		String jsonBody = "{\r\n" + 
 				"    \"query\": \"OK\"\r\n" + 
 				"}";
-		HttpURLConnection openConnection;
+		String appoggio = "";
+		
+		requestHandler rh = new requestHandler();
+		Object o = rh.sendRequest(jsonBody, "POST", url);
 		try {
-			openConnection = (HttpURLConnection) new URL(url).openConnection(); //Opening connection and setting all the properties
-			openConnection.setRequestMethod("POST");
-			openConnection.setRequestProperty("Authorization",
-					"Bearer "+token);
-			openConnection.setDoOutput(true);
-			openConnection.setRequestProperty("Content-Type", "application/json");
-			OutputStream os = openConnection.getOutputStream();
-			byte[] input = jsonBody.getBytes("utf-8");
-			os.write(input, 0, input.length);									//the request is written in bytes and sent
-			InputStream in = openConnection.getInputStream();
-
-			String data = "";
-			String appoggio = "";
-			try {
-				InputStreamReader inR = new InputStreamReader(in);
-				BufferedReader buf = new BufferedReader(inR);
-				data = buf.readLine();
-			} finally {
-				in.close();
+			if(o instanceof jsonError) {
+				if(((jsonError) o).getError_code()==404) throw new invalidTokenException();
+				if(((jsonError) o).getError_code()==500) throw new invalidTokenException();
 			}
+			String data = (String)o;
 			try {
 				JSONObject obj = (JSONObject) JSONValue.parseWithException(data);
 				appoggio = (String) obj.get("result");
@@ -65,14 +67,15 @@ public class user {
 				}
 			} catch (ParseException e) {
 				
-			} 
-			
-		}catch (IOException e) {			//If the token is not valid, sending the request throws an exception and so the token field is left blank
-			
+			}
+		}catch (invalidTokenException e) {			//If the token is not valid, sending the request throws an exception and so the token field is left blank
+			user.setToken("");
 		}
 		
 	}
 	
+	
+
 	/**
 	 * If the checkToken methods confirms that the token is valid this method proceeds to check if the directory path.\
 	 * specified by the user is existing.
@@ -96,34 +99,19 @@ public class user {
 					"    \"include_mounted_folders\": true,\r\n" + 
 					"    \"include_non_downloadable_files\": true\r\n" + 
 					"}";
-			HttpURLConnection openConnection;
+			requestHandler rh = new requestHandler();
+			Object o = rh.sendRequest(jsonBody, "POST", url);
 			try {
-				openConnection = (HttpURLConnection) new URL(url).openConnection(); //Opening connection and setting all the properties
-				openConnection.setRequestMethod("POST");
-				openConnection.setRequestProperty("Authorization",
-						"Bearer "+token);
-				openConnection.setDoOutput(true);
-				openConnection.setRequestProperty("Content-Type", "application/json");
-				OutputStream os = openConnection.getOutputStream();
-				byte[] input = jsonBody.getBytes("utf-8");
-				os.write(input, 0, input.length);									//the request is written in bytes and sent
-				InputStream in = openConnection.getInputStream();
-	
-				String data = "";
-				String appoggio = "";
-				try {
-					InputStreamReader inR = new InputStreamReader(in);
-					BufferedReader buf = new BufferedReader(inR);	//Opening an input stream to catch the response from the API
-					data = buf.readLine();
-				} finally {
-					in.close();
+				if(o instanceof jsonError) {
+					if(((jsonError) o).getError_code()==404) throw new invalidPathException();
+					if(((jsonError) o).getError_code()==500) throw new invalidPathException();
 				}
   				user.setPath(path);		// If the operation is concluded without any exception the path is correct
 				user.setLOGGED_IN(true);
-				
-			}catch (IOException e) {
-				user.setPath("InvalidPath");	//Otherwise an exception is thrown and the path field shows the error
+			}catch(invalidPathException e) {
+				user.setToken("InvalidPath");
 			}
+				
 		}else {		//if the token is incorrect the token field shows the error 
 			user.setToken("InvalidToken");
 		}
