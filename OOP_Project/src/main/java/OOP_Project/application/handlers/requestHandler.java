@@ -22,7 +22,7 @@ public class requestHandler {
 	/**
 	 * This method handles the connection to the DropBox API
 	 * @param method Request-method (GET - POST - DELETE..)
-	 * @param url The ulr to the request we want to make
+	 * @param url The URL to the request we want to make
 	 * @return A HttpURLConnection object if the connection is established, otherwise it returns an error.
 	 */
 	public Object establish(String method,String url) {

@@ -48,8 +48,10 @@ public class memory {
 
 	/**
 	 * <b>Method</b> needed to send the listReviews request and store all the data in the 'reviews' ArrayList.
+	 * The connection and the request to the DropBpx API are handled by the 'requestHandler' class. 
 	 * If the operation goes well, the 'reviews' ArrayList is filled up, otherwise an error is returned.
 	 * @param file The file we are working with.
+	 * @see package OOP_Project.application.handlers.requestHandler
 	 * @return A JSONArray containing all the reviews made on that file.
 	 */
 	public static Object listReview(String file){
@@ -59,9 +61,9 @@ public class memory {
 				"    \"mode\": \"path\",\r\n" + 
 				"    \"limit\": 99\r\n" + 
 				"}";
-		requestHandler rh = new requestHandler();
+		requestHandler rh = new requestHandler(); //We call the requestHandler method to establish the connection to the dropbox API
 		String app = "";
-		Object o = rh.sendRequest(jsonBody, "POST", url);
+		Object o = rh.sendRequest(jsonBody, "POST", url); // always using the request handler we send the request
 		if(o instanceof jsonError) {
 			if(((jsonError) o).getError_code()==404)return new jsonError("The file hasn't been found in the current directory",404,"InvalidPathError");
 			if(((jsonError) o).getError_code()==500)return new jsonError("An error occurred during the connection to the API",500,"InternalServerError");
@@ -205,7 +207,7 @@ public class memory {
 
 		
 		Object test = memory.listReview(file); // The reviews vector is refreshed
-		if(test instanceof jsonError) return new jsonError("An error occurred during the listReview call (check file name)",500,"InternalServerError");
+		if(test instanceof jsonError) return new jsonError("The file hasn't been found in the current directory",404,"InvalidPathError");
 		for(review r : reviews) {
 			app = r.getClient_modified().substring(0,10);
 			if(app.compareTo(correctDate)==0) dailyReviews.add(r); 
@@ -277,7 +279,7 @@ public class memory {
 		reviews.removeAll(reviews);
 		
 		Object test = memory.listReview(file); // The reviews vector is refreshed
-		if(test instanceof jsonError) return new jsonError("An error occurred during the listReview call (check file name)",500,"InternalServerError");
+		if(test instanceof jsonError) return new jsonError("The file hasn't been found in the current directory",404,"InvalidPathError");
 		for(review r : reviews) {
 			app = r.getClient_modified().substring(0,10);
 			try {
@@ -365,6 +367,8 @@ public class memory {
 	/**
 	 * 
 	 * This method organizes the parameters to send the getMetadata request for a single file.
+	 * The connection and the request to the DropBpx API are handled by the 'requestHandler' class. 
+	 * @see package OOP_Project.application.handlers.requestHandler
 	 * @param fileName The file we want to get the data from
 	 * @return An object containing the metadata
 	 */
@@ -376,8 +380,8 @@ public class memory {
 				"    \"include_deleted\": false,\r\n" + 
 				"    \"include_has_explicit_shared_members\": false\r\n" + 
 				"}";
-		requestHandler rh = new requestHandler();
-		Object o = rh.sendRequest(jsonBody, "POST", url);
+		requestHandler rh = new requestHandler(); //We call the requestHandler method to establish the connection to the dropbox API
+		Object o = rh.sendRequest(jsonBody, "POST", url);// always using the request handler we send the request
 		if(o instanceof jsonError) {
 			if(((jsonError) o).getError_code()==404)return new jsonError("The file hasn't been found in the current directory",404,"InvalidPathError");
 			if(((jsonError) o).getError_code()==500)return new jsonError("An error occurred during the connection to the API",500,"InternalServerError");
@@ -393,6 +397,8 @@ public class memory {
 	/**
 	 * 
 	 * This method needs to help the other methods getting all the file names in the folder
+	 * The connection and the request to the DropBpx API are handled by the 'requestHandler' class. 
+	 * @see package OOP_Project.application.handlers.requestHandler
 	 * @return An Array list containing all the names (String)
 	 */
 	public static Object listFolder() {
@@ -407,8 +413,8 @@ public class memory {
 				"    \"include_mounted_folders\": true,\r\n" + 
 				"    \"include_non_downloadable_files\": true\r\n" + 
 				"}";
-		requestHandler rh = new requestHandler();
-		Object o = rh.sendRequest(jsonBody, "POST", url);
+		requestHandler rh = new requestHandler(); //We call the requestHandler method to establish the connection to the dropbox API
+		Object o = rh.sendRequest(jsonBody, "POST", url);// always using the request handler we send the request
 		if(o instanceof jsonError) {
 			if(((jsonError) o).getError_code()==404)return new jsonError("The file hasn't been found in the current directory",404,"InvalidPathError");
 			if(((jsonError) o).getError_code()==500)return new jsonError("An error occurred during the connection to the API",500,"InternalServerError");
@@ -428,8 +434,4 @@ public class memory {
 		return files;								// Sending back the names to the main method
 
 	}
-
-
-
-	
 }
