@@ -21,7 +21,7 @@ public class statResponse {
 	/**
 	 * Average time between 2 reviews
 	 */
-	private String avarage=null;
+	private String average=null;
 	/**
 	 * Standard deviation made on all the reviews
 	 */
@@ -31,37 +31,69 @@ public class statResponse {
 		super();
 		this.max_time = null;
 		this.min_time = null;
-		this.avarage = null;
+		this.average = null;
 		this.stdDev = null;
 	}
-	public statResponse(String max_time, String min_time, String avarage, String stdDev) {		//Constructor with parameters
+	public statResponse(String max_time, String min_time, String average, String stdDev) {		//Constructor with parameters
 		super();
 		this.max_time = max_time;
 		this.min_time = min_time;
-		this.avarage = avarage;
+		this.average = average;
 		this.stdDev = stdDev;
 	}
+	/**
+	 * 
+	 * @return max_time
+	 */
 	public String getMax_time() {
 		return max_time;
 	}
+	/**
+	 * 
+	 * @param max_time
+	 */
 	public void setMax_time(String max_time) {
 		this.max_time = max_time;
 	}
+	/**
+	 * 
+	 * @return min_time
+	 */
 	public String getMin_time() {
 		return min_time;
 	}
+	/**
+	 * 
+	 * @param min_time
+	 */
 	public void setMin_time(String min_time) {
 		this.min_time = min_time;
 	}
-	public String getAvarage() {
-		return avarage;
+	/**
+	 * 
+	 * @return average
+	 */
+	public String getAverage() {
+		return average;
 	}
+	/**
+	 * 
+	 * @param average
+	 */
 	public void setAvarage(String avarage) {
-		this.avarage = avarage;
+		this.average = avarage;
 	}
+	/**
+	 * 
+	 * @return stdDev
+	 */
 	public String getStdDev() {
 		return stdDev;
 	}
+	/**
+	 * 
+	 * @param stdDev
+	 */
 	public void setStdDev(String stdDev) {
 		this.stdDev = stdDev;
 	}

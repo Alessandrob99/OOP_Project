@@ -38,92 +38,145 @@ public class review {
 	}
 
 	
-	
+	/**
+	 * 
+	 * @return name
+	 */
 	public String getName() {
 		return name;
 	}
-
+	/**
+	 * 
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	/**
+	 * 
+	 * @return path_lower
+	 */
 	public String getPath_lower() {
 		return path_lower;
 	}
-
+	/**
+	 * 
+	 * @param path_lower
+	 */
 	public void setPath_lower(String path_lower) {
 		this.path_lower = path_lower;
 	}
-
+	/**
+	 * 
+	 * @return path_display
+	 */
 	public String getPath_display() {
 		return path_display;
 	}
-
+	/**
+	 * 
+	 * @param path_display
+	 */
 	public void setPath_display(String path_display) {
 		this.path_display = path_display;
 	}
-
+	/**
+	 *  
+	 * @return id
+	 */
 	public String getId() {
 		return id;
 	}
-
+	/**
+	 * 
+	 * @param id
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
-
+	/**
+	 * 
+	 * @return client_modified
+	 */
 
 	public String getClient_modified() {
 		return client_modified;
 	}
-
-
+	/**
+	 * 
+	 * @param client_modified
+	 */
 
 	public void setClient_modified(String client_modified) {
 		this.client_modified = client_modified;
 	}
-
-
-
+	/**
+	 * 
+	 * @return server_modified
+	 */
 	public String getServer_modified() {
 		return server_modified;
 	}
-
-
-
+	/**
+	 * 
+	 * @param server_modified
+	 */
 	public void setServer_modified(String server_modified) {
 		this.server_modified = server_modified;
 	}
-
-
-
+	/**
+	 * 
+	 * @return rev
+	 */
 	public String getRev() {
 		return rev;
 	}
-
+	/**
+	 * 
+	 * @param rev
+	 */
 	public void setRev(String rev) {
 		this.rev = rev;
 	}
-
+	/**
+	 * 
+	 * @return content_hash
+	 */
 	public String getContent_hash() {
 		return content_hash;
 	}
-
+	/**
+	 * 
+	 * @param content_hash
+	 */
 	public void setContent_hash(String content_hash) {
 		this.content_hash = content_hash;
 	}
-
+	/**
+	 *
+	 * @return size
+	 */
 	public long getSize() {
 		return size;
 	}
-
+	/**
+	 * 
+	 * @param size
+	 */
 	public void setSize(long size) {
 		this.size = size;
 	}
-
+	/**
+	 * 
+	 * @return is_downloadable
+	 */
 	public boolean isIs_downloadable() {
 		return is_downloadable;
-	}
-
+	}	
+	/**
+	 * 
+	 * @param is_downloadable
+	 */
 	public void setIs_downloadable(boolean is_downloadable) {
 		this.is_downloadable = is_downloadable;
 	}

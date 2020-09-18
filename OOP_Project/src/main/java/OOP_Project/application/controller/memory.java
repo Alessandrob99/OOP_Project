@@ -220,6 +220,8 @@ public class memory {
 	/**
 	 * 
 	 * This method returns all the review made in a specific day
+	 * The method also checks the validity of the date using the 'dateFormatHandler' class
+	 * @see OOP_Project.application.handlers.dateFormatHandler
 	 * @param date The specified date 
 	 * @return An ArrayList with all the reviews made on that day on all the file in the directory
 	 */
@@ -253,6 +255,8 @@ public class memory {
 	/**
 	 * 
 	 * Once the user specified a date and a file name this method returns all the reviews made in the week containing that date on the given file
+	 * The method also checks the validity of the date using the 'dateFormatHandler' class
+	 * @see OOP_Project.application.handlers.dateFormatHandler
 	 * @param date The week is passed by passing a date, the system automatically finds the corresponding week
 	 * @param file The file we want to check
 	 * @return An ArrayList containing all the reviews
@@ -298,6 +302,8 @@ public class memory {
 
 	/**
 	 * Once the user specified a date ,this method returns all the reviews made in the week containing that date
+	 * The method also checks the validity of the date using the 'dateFormatHandler' class
+	 * @see OOP_Project.application.handlers.dateFormatHandler
 	 * @param date The week is passed by passing a date, the system automatically finds the corresponding week
 	 * @return An ArrayList containing all the reviews
 	 */

@@ -35,21 +35,45 @@ public class jsonError {
 		this.error_code = 0;
 		this.name = "";
 	}
+	/**
+	 * 
+	 * @return message
+	 */
 	public String getMessage() {
 		return message;
 	}
+	/**
+	 * 
+	 * @param message
+	 */
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	/**
+	 * 
+	 * @return error_code
+	 */
 	public int getError_code() {
 		return error_code;
 	}
+	/**
+	 * 
+	 * @param error_code
+	 */
 	public void setError_code(int error_code) {
 		this.error_code = error_code;
 	}
+	/**
+	 * 
+	 * @return name
+	 */
 	public String getName() {
 		return name;
 	}
+	/**
+	 * 
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}

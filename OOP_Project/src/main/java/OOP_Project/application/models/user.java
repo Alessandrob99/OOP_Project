@@ -117,32 +117,50 @@ public class user {
 		}
 	}
 
-
+	/**
+	 * 
+	 * @return token
+	 */
 	public static String getToken() {
 		return token;
 	}
 
-
+	/**
+	 * 
+	 * @param token
+	 */
 	public static void setToken(String token) {
 		user.token = token;
 	}
 
-
+	/**
+	 * 
+	 * @return path
+	 */
 	public static String getPath() {
 		return path;
 	}
 
-
+	/**
+	 * 
+	 * @param path
+	 */
 	public static void setPath(String path) {
 		user.path = path;
 	}
 
-
+	/**
+	 * 
+	 * @return LOGGED_IN
+	 */
 	public static boolean isLOGGED_IN() {
 		return LOGGED_IN;
 	}
 
-
+	/**
+	 * 
+	 * @param lOGGED_IN
+	 */
 	public static void setLOGGED_IN(boolean lOGGED_IN) {
 		LOGGED_IN = lOGGED_IN;
 	}

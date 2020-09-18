@@ -23,15 +23,31 @@ public class dailyRevsResponse {
 		this.revs = revs;
 		this.counter = revs.size();
 	}
+	/**
+	 * 
+	 * @return counter
+	 */
 	public int getCounter() {
 		return counter;
 	}
+	/**
+	 * 
+	 * @param counter
+	 */
 	public void setCounter(int counter) {
 		this.counter = counter;
 	}
+	/**
+	 * 
+	 * @return revs
+	 */
 	public ArrayList<review> getRevs() {
 		return revs;
 	}
+	/**
+	 * 
+	 * @param revs
+	 */
 	public void setRevs(ArrayList<review> revs) {
 		this.revs = revs;
 	}
