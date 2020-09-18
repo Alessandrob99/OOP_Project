@@ -31,7 +31,7 @@ This application only uses the GET and POST methods.
 To send a request,all the user has to do is to choose a route and specify the appropriate parameters.  
 
 ## Routes   
-Method|route|description
+METHOD|ROUTE|DESCRIPTION
 -|-|-
 GET|**/listRev/[file_name]**| Returns all the reviews done on that file.
 POST | **/dailyRev/[file_name/all]?date=[yyyy-MM-dd]** | Returns all the reviews made on one or all files on that day.
