@@ -148,13 +148,13 @@ public class restController {
 	@GetMapping("/help")
 	public Object Help() {
 		if(user.isLOGGED_IN()) {		//If the user is not logged in he won't be able to access any route
-			return "ROUTES:\n-GET /listRev/(file_name)\nSpecifying a file name in this routee will return a list \n"
-					+ "of review linked to a set of information usefull to the identification\n\n"
-					+ "-GET /stats/(file_name)\nSpecifying a file name in this routee will return a JSONObject containing\n"
-					+ "statistics regarding the time lapse between every revision made\n"
-					+ "(Date format :  MM=months DD=days hh=hours mm=minutes ss = seconds\n\n"
-					+ "-POST /dailyRev/(file_name/all)\nSpecifying a file name and adding the date attribute the app will return  \n"
-					+ "a JSON arrray containing all the reviews (+ linked information) made on that date\n"
+			return "ROUTES:\n-GET /listRev/(file_name)\nSpecifying a file name in this route will return a list \n"
+					+ "of reviews linked to a set of information usefull to the identification\n\n"
+					+ "-GET /stats/(file_name)\nSpecifying a file name in this route will return a JSONObject containing\n"
+					+ "statistics regarding the time lapse between every revision made.\n"
+					+ "(Date format :  MM=months DD=days hh=hours mm=minutes ss = seconds)\n\n"
+					+ "-POST /dailyRev/(file_name/all)\nSpecifying a file name and adding the date attribute, the app will return  \n"
+					+ "a JSON arrray containing all the reviews (+ linked information) made on that date on the given file,and a counter.\n"
 					+ "If 'all' is passed instead of the file name, all the review made on that day will be returned.\n"
 					+ "(The date must be written respecting the yyyy-mm-DD form)\n\n"
 					+ "-POST /weeklyRev/(file_name/all)\nSpecifying a file name and adding the date attribute the app will return  \n"
@@ -164,9 +164,9 @@ public class restController {
 					+ "-GET /metadata/(file_name/all)\nThis route allows the user to get metadata from the directory\n"
 					+ "If the user indicates a single file he gets metadata from that file only, if he indicates 'all'\n "
 					+ "then he gets the metadata of all the files in the directory.\n\n"
-					+ "-POST /check\nThis is the routee that performs the user authentication, the user only needs\n"
+					+ "-POST /check\nThis is the route that performs the user authentication, the user only needs\n"
 					+ "to specify the 'token' and 'path' attributes(access token to the DropBox API and folder path)\n"
-					+ "A boolean indicating if the credentials are valid or not is returned";
+					+ "A boolean indicating if the credentials are valid or not is returned.";
 		}else {
 			return new jsonError("The user must authenticate his credentials before using any route",400,"UserNotLoggedError");
 		}
