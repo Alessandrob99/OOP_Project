@@ -29,8 +29,8 @@ There are also some alternatives like *Insomnia REST Client*, *HTTPie*, *Paw*and
 This application only uses the GET and POST methods.
 
 Method|route|description
-GET|/listRev/[file_name]| Returns all the reviews made on that file.
 -|-|-
+GET|/listRev/[file_name]| Returns all the reviews made on that file.
 POST | **/dailyRev/[file_name/all]?date=[yyyy-MM-dd]** | Returns all the reviews made on one or all files on that day.
 POST | **/weeklyRev/[file_name/all]?date=[yyyy-MM-dd]** | Returns all the reviews made on one, or all files on the week corresponding to that day.
 POST | **/check?token=[token] &path=[path_dir]** | Allows to user to authenticate his credentials (path indicating the folder to work with and API access token).
