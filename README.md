@@ -1,6 +1,6 @@
 # Object Oriented Programming Project 2020
 ### Bedetta Alessandro	
-============================================================================
+===========================================================================
 ## A brief introduction
 
 This project consists of an application which allows the user to have a **clear vision of the revisions** made on files located in a Dropbox folder. 
